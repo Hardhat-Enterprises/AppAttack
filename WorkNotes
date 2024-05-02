@@ -1,0 +1,18 @@
+Prerequisites: 
+Login or sign up to snyk.io on the VM ( create a service account) 
+Run the following command : 
+rm -r ~/.bashrc
+nano ~/.bashrc
+Ctrl+O, Enter Ctrl +X
+
+To run the tool 
+./tools.sh
+If error: zsh: permission denied: ./tool.sh
+Run: 
+chmod +x tools.sh
+
+the first time when tool runs it will check if tools installed if not, it will install the tools required to install the scanners and then install the scanner, if it’s already installed it will take you to the menu where you select which tool to run
+
+Todo: 
+-	For snyk, need to create a generic account 
+-	
