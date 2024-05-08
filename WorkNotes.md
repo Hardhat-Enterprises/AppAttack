@@ -1,7 +1,7 @@
-Prerequisites: 
+<h1> Automation Tool Prerequisites and Doco </h1>
 Login or sign up to snyk.io on the VM
 Grab organisation ID, you will need it to run snyk scan, the results will be emailed to the address you have used during registration to snyk.io
-
+<img src="snyk-org.PNG">
 Run the following command : 
 rm -r ~/.bashrc
 nano ~/.bashrc
