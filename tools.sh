@@ -121,41 +121,131 @@ main() {
         echo -e "${YELLOW}Select the tool you want to run:${NC}"
         echo "1) osv-scanner"
         echo "2) snyk cli"
-        echo "3) brakeman Note: To scroll through pages press space, to exit the results page press q"
+        echo "3) brakeman"
         echo "4) nmap"
         echo "5) nikto"
         echo "6) Run all"
         echo "7) Exit"
         read -p "Enter your choice (1/2/3/4/5/6/7): " choice
+        read -p "Do you want to output the results to a text file? Results are saved to /home/kali (y/n): " output_to_file
+
+        # Write each tool output to their own individual txt file
+        output=""
+        if [[ "$output_to_file" == "y" ]]; then
+            case $choice in
+                1) output=" > /home/kali/osv-scanner-results.txt" ;;
+                2) output=" > /home/kali/snyk-results.txt" ;;
+                3) output=" > /home/kali/brakeman-results.txt" ;;
+                4) output=" > /home/kali/nmap-results.txt" ;;
+                5) output=" > /home/kali/nikto-results.txt" ;;
+                6) output=" > /home/kali/all-tools-results.txt" ;;
+            esac
+        fi
 
         case $choice in
             1)
                 read -p "Enter directory to scan (current directory ./): " directory
-                osv-scanner scan "./$directory"
+                osv-scanner scan "$directory"$output
                 ;;
             2)
-                snyk code scan
+                read -p "Select Snyk option:
+                1) Run code test locally
+                2) Monitor for vulnerabilities and see results in Snyk UI
+                Enter your choice (1/2): " snyk_option
+
+                case $snyk_option in
+                    1)
+                        read -p "Enter directory to scan (current directory ./): " directory
+                        snyk code test $directory$output
+                        ;;
+                    2)
+                        read -p "Enter directory to scan (current directory ./): " directory
+                        snyk monitor $directory --all-projects$output
+                        ;;
+                    *)
+                        echo -e "${RED}Invalid choice!${NC}"
+                        ;;
+                esac
                 ;;
             3)
-                sudo brakeman --force
+                sudo brakeman --force$output
                 ;;
             4)
                 read -p "Enter URL to scan: " url
-                nmap -v -A "$url"
+                nmap -v -A "$url"$output
                 ;;
             5)
                 read -p "Enter URL to scan: " url
-                nikto -h "$url"
+                nikto -h "$url"$output
                 ;;
             6)
-                read -p "Enter directory to scan (current directory ./): " directory
-                osv-scanner scan "./$directory"
-                snyk code scan
-                sudo brakeman --force
-                read -p "Enter URL to scan: " url
-                nmap -v -A"$url"
-                read -p "Enter URL to scan: " url
-                nikto -h "$url"
+                if [[ "$output_to_file" == "y" ]]; then
+                    echo -e "${YELLOW}Running osv-scanner...${NC}"
+                    read -p "Enter directory to scan (current directory ./): " directory
+                    osv-scanner scan "$directory" > /home/kali/osv-scanner-results.txt
+                    echo -e "${YELLOW}Running snyk...${NC}"
+                    read -p "Select Snyk option:
+                    1) Run code test locally
+                    2) Monitor for vulnerabilities and see results in Snyk UI
+                    Enter your choice (1/2): " snyk_option
+
+                    case $snyk_option in
+                        1)
+                            read -p "Enter directory to scan (current directory ./): " directory
+                            snyk code test $directory > /home/kali/snyk-results.txt
+                            ;;
+                        2)
+                            read -p "Enter directory to scan (current directory ./): " directory
+                            snyk monitor $directory --all-projects > /home/kali/snyk-results.txt
+                            ;;
+                        *)
+                            echo -e "${RED}Invalid choice!${NC}"
+                            ;;
+                    esac
+                    echo -e "${YELLOW}Running brakeman...${NC}"
+                    sudo brakeman --force > /home/kali/brakeman-results.txt
+                    echo -e "${YELLOW}Running nmap...${NC}"
+                    read -p "Enter a hostname or IP address to scan: " url
+                    read -p "Enter a port to scan: " port
+                    nmap -p "$port" -v -A "$url" > /home/kali/nmap-results.txt
+                    echo -e "${YELLOW}Running nikto...${NC}"
+                    read -p "Enter URL to scan: " url
+                    nikto -h "$url" > /home/kali/nikto-results.txt
+                    echo -e "${GREEN}Done!.${NC}"
+                else
+                    echo -e "${YELLOW}Running osv-scanner...${NC}"
+                    read -p "Enter directory to scan (current directory ./): " directory
+                    osv-scanner scan "$directory"
+                    echo -e "${YELLOW}Running snyk...${NC}"
+                    read -p "Select Snyk option:
+                    1) Run code test locally
+                    2) Monitor for vulnerabilities and see results in Snyk UI
+                    Enter your choice (1/2): " snyk_option
+
+                    case $snyk_option in
+                        1)
+                            read -p "Enter directory to scan (current directory ./): " directory
+                            snyk code test $directory
+                            ;;
+                        2)
+                            read -p "Enter directory to scan (current directory ./): " directory
+                            snyk monitor $directory --all-projects
+                            ;;
+                        *)
+                            echo -e "${RED}Invalid choice!${NC}"
+                            ;;
+                    esac
+                    echo -e "${YELLOW}Running brakeman...${NC}"
+                    sudo brakeman --force
+                    echo -e "${YELLOW}Running nmap...${NC}"
+                    read -p "Enter a hostname or IP address to scan: " url
+                    read -p "Enter a port to scan: " port
+                    nmap -p "$port" -v -A "$url"
+                    echo -e "${YELLOW}Running nikto...${NC}"
+                    read -p "Enter URL to scan: " url
+                    nikto -h "$url"
+                    echo -e "${GREEN}Done!.${NC}"
+                fi
                 ;;
             7)
                 echo -e "${GREEN}Exiting.${NC}"
