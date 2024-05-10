@@ -127,6 +127,8 @@ install_owasp_zap() {
         wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
         if [ $? -eq 0 ]; then
             tar -xvf ZAP_2.15.0_Linux.tar.gz
+            # Remove existing directory if present
+            sudo rm -rf /opt/owasp-zap/ZAP_2.15.0
             sudo mv ZAP_2.15.0 /opt/owasp-zap
             if [ $? -eq 0 ]; then
                 echo -e "${GREEN}OWASP ZAP installed successfully!${NC}"
