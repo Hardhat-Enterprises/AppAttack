@@ -35,6 +35,18 @@ install_osv_scanner() {
         echo -e "${GREEN}osv-scanner is already installed.${NC}"
     fi
 }
+# Function to install osv-scanner
+install_osv_scanner() {
+    if ! command -v osv-scanner &> /dev/null; then
+        echo -e "${YELLOW}Installing osv-scanner...${NC}"
+        go install github.com/google/osv-scanner/cmd/osv-scanner@v1
+        echo -e "${GREEN}osv-scanner installed successfully!${NC}"
+        echo "export PATH=\$PATH:$(go env GOPATH)/bin" >> ~/.bashrc
+        source ~/.bashrc
+    else
+        echo -e "${GREEN}osv-scanner is already installed.${NC}"
+    fi
+}
 
 # Function to install snyk cli
 install_snyk_cli() {
