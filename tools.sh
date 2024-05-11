@@ -17,8 +17,10 @@ display_help() {
     echo "   - Download: https://cirt.net/nikto/"
     echo "6) OWASP ZAP: Web application security testing tool"
     echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
-    echo "7) Help: Display this help menu"
-    echo "8) Exit: Exit the script"
+    echo "7) Learning resources: Learn about most common vulnerabilities in web security"
+    echo " - Access for this link: https://www.linkedin.com/pulse/10-common-web-security-vulnerabilities-bkplussoftware-2wzrc/"
+    echo "8) Help: Display this help menu"
+    echo "9) Exit: Exit the script"
 }
 
 # Colors for echo
@@ -269,4 +271,3 @@ main() {
 }
 
 main
-
