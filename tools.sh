@@ -4,16 +4,19 @@
 display_help() {
     echo -e "${YELLOW}Interactive Help Menu:${NC}"
     echo "1) osv-scanner: Scan a directory for vulnerabilities"
+    echo "   - Download: https://github.com/google/osv-scanner"
     echo "2) snyk cli: Test code locally or monitor for vulnerabilities"
+    echo "   - Download: https://snyk.io/download/"
     echo "   - Run code test locally: snyk code test <directory>"
     echo "   - Monitor for vulnerabilities: snyk monitor <directory> --all-projects"
     echo "3) brakeman: Scan a Ruby on Rails application for security vulnerabilities"
+    echo "   - Download: https://github.com/presidentbeef/brakeman"
     echo "4) nmap: Network exploration and security auditing tool"
-    echo "   - Usage: nmap <options> <target>"
+    echo "   - Download: https://nmap.org/download.html"
     echo "5) nikto: Web server scanner"
-    echo "   - Usage: nikto -h <target>"
+    echo "   - Download: https://cirt.net/nikto/"
     echo "6) OWASP ZAP: Web application security testing tool"
-    echo "   - Usage: ./zap.sh -quickurl <target>"
+    echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
     echo "7) Help: Display this help menu"
     echo "8) Exit: Exit the script"
 }
@@ -266,3 +269,4 @@ main() {
 }
 
 main
+
