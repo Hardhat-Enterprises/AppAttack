@@ -1,5 +1,23 @@
 #!/bin/bash
 
+# Function to display help menu
+display_help() {
+    echo -e "${YELLOW}Interactive Help Menu:${NC}"
+    echo "1) osv-scanner: Scan a directory for vulnerabilities"
+    echo "2) snyk cli: Test code locally or monitor for vulnerabilities"
+    echo "   - Run code test locally: snyk code test <directory>"
+    echo "   - Monitor for vulnerabilities: snyk monitor <directory> --all-projects"
+    echo "3) brakeman: Scan a Ruby on Rails application for security vulnerabilities"
+    echo "4) nmap: Network exploration and security auditing tool"
+    echo "   - Usage: nmap <options> <target>"
+    echo "5) nikto: Web server scanner"
+    echo "   - Usage: nikto -h <target>"
+    echo "6) OWASP ZAP: Web application security testing tool"
+    echo "   - Usage: ./zap.sh -quickurl <target>"
+    echo "7) Help: Display this help menu"
+    echo "8) Exit: Exit the script"
+}
+
 # Colors for echo
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -181,6 +199,9 @@ main() {
 
     # Check and install OWASP ZAP
     install_owasp_zap
+
+    # Display help menu
+    display_help
 
     while true; do
         # Run tools
