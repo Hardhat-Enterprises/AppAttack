@@ -7,6 +7,9 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'App-Attack',
+			logo: {
+				src: './src/assets/app-attack-logo.png',
+			},
 			social: {
 				github: 'https://github.com/withastro/starlight',
 			},
