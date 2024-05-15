@@ -136,7 +136,7 @@ main() {
                 1) output=" > /home/kali/osv-scanner-results.txt" ;;
                 2) output=" > /home/kali/snyk-results.txt" ;;
                 3) output=" > /home/kali/brakeman-results.txt" ;;
-                4) output=" > /home/kali/nmap-results.txt" ;;
+                4) output=" /home/kali/nmap-results.txt" ;;
                 5) output=" > /home/kali/nikto-results.txt" ;;
                 6) output=" > /home/kali/all-tools-results.txt" ;;
             esac
@@ -156,7 +156,7 @@ main() {
                 case $snyk_option in
                     1)
                         read -p "Enter directory to scan (current directory ./): " directory
-                        snyk code test $directory$output
+                        snyk code test $directory $output
                         ;;
                     2)
                         read -p "Enter directory to scan (current directory ./): " directory
@@ -168,11 +168,12 @@ main() {
                 esac
                 ;;
             3)
-                sudo brakeman --force$output
+                read -p "Enter directory to scan (current directory ./): " directory
+                sudo brakeman $directory --force $output
                 ;;
             4)
-                read -p "Enter URL to scan: " url
-                nmap -v -A "$url"$output
+                read -p "Enter URL or IP address to scan: " url
+                nmap -v -A -oG $output "$url"
                 ;;
             5)
                 read -p "Enter URL to scan: " url
@@ -203,7 +204,8 @@ main() {
                             ;;
                     esac
                     echo -e "${YELLOW}Running brakeman...${NC}"
-                    sudo brakeman --force > /home/kali/brakeman-results.txt
+                    read -p "Enter directory to scan (current directory ./): " directory
+                    sudo brakeman $directory --force > /home/kali/brakeman-results.txt
                     echo -e "${YELLOW}Running nmap...${NC}"
                     read -p "Enter a hostname or IP address to scan: " url
                     read -p "Enter a port to scan: " port
