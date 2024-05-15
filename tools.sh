@@ -29,7 +29,7 @@ install_osv_scanner() {
         echo -e "${YELLOW}Installing osv-scanner...${NC}"
         go install github.com/google/osv-scanner/cmd/osv-scanner@v1
         echo -e "${GREEN}osv-scanner installed successfully!${NC}"
-        echo "export PATH=\$PATH:$(go env GOPATH)/bin" >> ~/.bashrc
+        echo "export PATH=$PATH:$(go env GOPATH)/bin" >> ~/.bashrc
         source ~/.bashrc
     else
         echo -e "${GREEN}osv-scanner is already installed.${NC}"
