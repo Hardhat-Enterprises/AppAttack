@@ -257,16 +257,19 @@ main() {
     
    while true; do
         read -p "Choose an option (8 for help): " choice
-        read -p "Do you want to output the results to a text file? Results are saved to /home/kali (y/n): " output_to_file
+        # Check if user has already chosen to output to a text file and stop asking them if they have
+        if [ -z "$output_to_file" ]; then
+            read -p "Do you want to output the results to a text file? Results are saved to /home/kali (y/n): " output_to_file
+        fi
         output=""
         if [[ "$output_to_file" == "y" ]]; then
             case $choice in
-                1) output=" /home/kali/osv-scanner-results.txt" ;;
-                2) output=" > /home/kali/snyk-results.txt" ;;
-                3) output=" > /home/kali/brakeman-results.txt" ;;
-                4) output=" > /home/kali/nmap-results.txt" ;;
-                5) output=" > /home/kali/nikto-results.txt" ;;
-                6) output=" > /home/kali/owasp-zap-results.txt" ;;
+                1) output="/home/kali/osv-scanner-results.txt" ;;
+                2) output="/home/kali/snyk-results.txt" ;;
+                3) output="/home/kali/brakeman-results.txt" ;;
+                4) output="/home/kali/nmap-results.txt" ;;
+                5) output="/home/kali/nikto-results.txt" ;;
+                6) output="/home/kali/owasp-zap-results.txt" ;;
             esac
         fi
 
@@ -284,11 +287,11 @@ main() {
                 case $snyk_option in
                     1)
                         read -p "Enter directory to scan (current directory ./): " directory
-                        snyk code test $directory$output
+                        snyk code test $directory > $output
                         ;;
                     2)
                         read -p "Enter directory to scan (current directory ./): " directory
-                        snyk monitor $directory --all-projects$output
+                        snyk monitor $directory --all-projects > $output
                         ;;
                     *)
                         echo -e "${RED}Invalid choice!${NC}"
@@ -297,15 +300,15 @@ main() {
                 ;;
             3)
                 read -p "Enter directory to scan (current directory ./): " directory
-                sudo brakeman $directory --force$output
+                sudo brakeman $directory --force > $output
                 ;;
             4)
                 read -p "Enter URL or IP address to scan: " url
-                nmap -v -A -oG $output "$url"
+                nmap -v -A -oG - "$url" > $output
                 ;;
             5)
                 read -p "Enter URL to scan: " url
-                nikto -h $url$output
+                nikto -h $url > $output
                 ;;
             6)
                 run_owasp_zap
@@ -339,5 +342,4 @@ main() {
 
 # Execute main function
 main
-
 
