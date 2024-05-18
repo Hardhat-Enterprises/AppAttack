@@ -167,6 +167,7 @@ install_nikto() {
     fi
 }
 
+#text file is not generating
 # Function to install OWASP ZAP
 install_owasp_zap() {
     if ! command -v zap.sh &> /dev/null; then
