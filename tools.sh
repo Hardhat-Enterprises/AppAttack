@@ -24,12 +24,14 @@ display_help() {
     echo "   - Download: https://nmap.org/download.html"
     echo "5) nikto: Web server scanner"
     echo "   - Download: https://cirt.net/nikto/"
-    echo "6) OWASP ZAP: Web application security testing tool"
+    echo "6) LEGION: Automated web application security scanner"
+    echo " - Download: https://github.com/GoVanguard/legion"    
+    echo "7) OWASP ZAP: Web application security testing tool"
     echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
-    echo "7) Learning resources: Learn about most common vulnerabilities in web security"
+    echo "8) Learning resources: Learn about most common vulnerabilities in web security"
     echo "   - Access: https://www.linkedin.com/pulse/10-common-web-security-vulnerabilities-bkplussoftware-2wzrc/"
-    echo "8) Help: Display this help menu"
-    echo "9) Exit: Exit the script"
+    echo "9) Help: Display this help menu"
+    echo "10) Exit: Exit the script"
 }
 
 # Function to log messages
@@ -166,7 +168,22 @@ install_nikto() {
         echo -e "${GREEN}nikto is already installed.${NC}"
     fi
 }
-
+# Function to install LEGION
+install_legion() {
+    if ! command -v legion &> /dev/null; then
+        echo -e "${YELLOW}Installing LEGION...${NC}"
+        sudo apt update
+        sudo apt install -y legion
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}LEGION installed successfully!${NC}"
+        else
+            echo -e "${RED}Failed to install LEGION.${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${GREEN}LEGION is already installed.${NC}"
+    fi
+}
 # Function to install OWASP ZAP
 install_owasp_zap() {
     if ! command -v zap.sh &> /dev/null; then
@@ -219,6 +236,40 @@ run_owasp_zap() {
     fi
 }
 
+# Function to save vulnerabilities to file
+save_vulnerabilities() {
+    local tool=$1
+    local output_file="$tool-vulnerabilities.txt"
+    case $tool in
+        "osv-scanner")
+            osv-scanner scan "./$directory" > "$output_file"
+            ;;
+        "snyk")
+            snyk code scan > "$output_file"
+            ;;
+        "brakeman")
+            sudo brakeman --force > "$output_file"
+            ;;
+        "nmap")
+            nmap -v -A "$url" > "$output_file"
+            ;;
+        "nikto")
+            nikto -h "$url" > "$output_file"
+            ;;
+        "legion")
+            legion "$url" > "$output_file"
+            ;;
+    esac
+    echo -e "${GREEN}Vulnerabilities found:${NC}"
+    cat "$output_file"
+    read -p "Do you want to save the vulnerabilities to a file? (y/n) " save_to_file
+    if [[ "$save_to_file" == "y" ]]; then
+        echo -e "${GREEN}Vulnerabilities saved to $output_file${NC}"
+    else
+        echo -e "${GREEN}Vulnerabilities not saved to a file.${NC}"
+    fi
+}
+
 # Main function to check and install tools
 main() {
  
@@ -243,6 +294,8 @@ main() {
     install_nmap
     # Check and install nikto
     install_nikto
+    # Check and install LEGION
+    install_legion    
     # Check and install OWASP ZAP
     install_owasp_zap
     
@@ -255,23 +308,26 @@ main() {
     # Display help menu
     display_help
     
-   while true; do
-        read -p "Choose an option (8 for help): " choice
-        # Check if user has already chosen to output to a text file and stop asking them if they have
-        if [ -z "$output_to_file" ]; then
-            read -p "Do you want to output the results to a text file? Results are saved to /home/kali (y/n): " output_to_file
-        fi
-        output=""
+    while true; do
+    # Display help menu
+    display_help
+
+    read -p "Choose an option (9 for help): " choice
+    
+    output=""
+    if [[ "$choice" != "6" ]]; then
+        read -p "Do you want to output the results to a text file? Results are saved to /home/kali (y/n): " output_to_file
         if [[ "$output_to_file" == "y" ]]; then
             case $choice in
-                1) output="/home/kali/osv-scanner-results.txt" ;;
-                2) output="/home/kali/snyk-results.txt" ;;
-                3) output="/home/kali/brakeman-results.txt" ;;
-                4) output="/home/kali/nmap-results.txt" ;;
-                5) output="/home/kali/nikto-results.txt" ;;
-                6) output="/home/kali/owasp-zap-results.txt" ;;
+                1) output=" > /home/kali/osv-scanner-results.txt" ;;
+                2) output=" > /home/kali/snyk-results.txt" ;;
+                3) output=" > /home/kali/brakeman-results.txt" ;;
+                4) output=" > /home/kali/nmap-results.txt" ;;
+                5) output=" > /home/kali/nikto-results.txt" ;;
+                7) output=" > /home/kali/owasp-zap-results.txt" ;;
             esac
         fi
+    fi
 
         case $choice in
             1)
@@ -311,27 +367,30 @@ main() {
                 nikto -h $url > $output
                 ;;
             6)
+                legion 
+                ;;                 
+            7)
                 run_owasp_zap
                 ;;
-            7)
+            8)
                 echo -e "${YELLOW}Exiting...${NC}"
                 exit 0
                 ;;
-            8)
+            9)
                 display_help
                 ;;
-            9)
+            10)
                 # Learning resources link
                 echo -e "${YELLOW}Learning resources: Learn about most common vulnerabilities in web security${NC}"
                 echo -e "${GREEN}Access: https://www.linkedin.com/pulse/10-common-web-security-vulnerabilities-bkplussoftware-2wzrc/${NC}"
                 ;;
            
-            10)
+            11)
                 echo -e "${YELLOW}Exiting...${NC}"
                 log_message "Script ended"
                 exit 0
                 ;;
-            11)
+            12)
                 echo -e "${RED}Invalid choice, please try again.${NC}"
                 log_message "Invalid user input"
                 ;;
