@@ -263,6 +263,8 @@ install_nikto() {
 }
 
 
+# Function to install OWASP ZAP
+
 install_owasp_zap() {
     if [ ! -d "/opt/owasp-zap/ZAP_2.15.0" ]; then
         echo -e "${YELLOW}Installing OWASP ZAP...${NC}"
