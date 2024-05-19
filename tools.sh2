@@ -286,7 +286,8 @@ install_owasp_zap() {
         echo -e "${YELLOW}Installing OWASP ZAP...${NC}"
         wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz -P /tmp
         if [ $? -eq 0 ]; then
-            tar -xf /tmp/ZAP_2.15.0_Linux.tar.gz -C /opt/owasp-zap/
+            sudo mkdir -p /opt/owasp-zap
+            sudo tar -xzvf /tmp/ZAP_2.15.0_Linux.tar.gz -C /opt/owasp-zap/
             sudo rm -rf /opt/owasp-zap/ZAP_2.15.0
             sudo mv /opt/owasp-zap/ZAP_2.15.0 /opt/owasp-zap/
             if [ $? -eq 0 ]; then
@@ -304,14 +305,6 @@ install_owasp_zap() {
     fi
 }
 
-# Function to create directories and extract files
-setup_environment() {
-    # Create the target directory if it doesn't exist
-    sudo mkdir -p /opt/owasp-zap
-
-    # Extract the tarball to the target directory
-    sudo tar -xzvf /tmp/ZAP_2.15.0_Linux.tar.gz -C /opt/owasp-zap
-}
 
 # Function to run OWASP ZAP
 run_owasp_zap() {
