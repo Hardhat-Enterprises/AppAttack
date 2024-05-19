@@ -333,8 +333,12 @@ main() {
             1)
                 read -p "Enter directory to scan: " directory
                 source ~/.bashrc
-                osv-scanner --recursive "$directory" > $output
-                ;;
+                if [[ "$output_to_file" == "y" ]]; then
+                    osv-scanner --recursive "$directory" > $output
+                else
+                    osv-scanner --recursive "$directory"
+                fi
+               ;;
             2)
                 read -p "Select Snyk option:
                 1) Run code test locally
