@@ -1,0 +1,24 @@
+version: "3"
+services:
+  scantools:
+    #Build the image from the Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    #Image name
+    image: scantools:1.0
+
+    #Container name
+    container_name: scantools
+
+    #Enble interactive shell
+    tty: true
+    stdin_open: true
+
+    #command: bash
+    #Mount the host directory to the container
+    volumes:
+      - /home/kali:/home/kali
+    #Enfrore always running for the container
+    restart: always
