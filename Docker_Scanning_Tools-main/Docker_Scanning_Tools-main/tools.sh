@@ -25,7 +25,7 @@ display_help() {
     echo "5) nikto: Web server scanner"
     echo "   - Download: https://cirt.net/nikto/"
     echo "6) LEGION: Automated web application security scanner"
-    echo " - Download: https://github.com/GoVanguard/legion"    
+    echo " - Download: https://github.com/GoVanguard/legion"
     echo "7) OWASP ZAP: Web application security testing tool"
     echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
     echo "8) Help: Display this help menu"
@@ -57,7 +57,7 @@ check_updates() {
     
     # Update Nikto
     update_nikto
-    
+
     # Update Nmap
     update_nmap
 }
@@ -339,7 +339,39 @@ check_updates() {
     fi
 }
     
-    
+# Function to save vulnerabilities to file
+save_vulnerabilities() {
+    local tool=$1
+    local output_file="$tool-vulnerabilities.txt"
+    case $tool in
+        "osv-scanner")
+            osv-scanner scan "./$directory" > "$output_file"
+            ;;
+        "snyk")
+            snyk code scan > "$output_file"
+            ;;
+        "brakeman")
+            sudo brakeman --force > "$output_file"
+            ;;
+        "nmap")
+            nmap -v -A "$url" > "$output_file"
+            ;;
+        "nikto")
+            nikto -h "$url" > "$output_file"
+            ;;
+        "legion")
+            legion "$url" > "$output_file"
+            ;;
+    esac
+    echo -e "${GREEN}Vulnerabilities found:${NC}"
+    cat "$output_file"
+    read -p "Do you want to save the vulnerabilities to a file? (y/n) " save_to_file
+    if [[ "$save_to_file" == "y" ]]; then
+        echo -e "${GREEN}Vulnerabilities saved to $output_file${NC}"
+    else
+        echo -e "${GREEN}Vulnerabilities not saved to a file.${NC}"
+    fi
+}    
 
 # Main function to check and install tools
 main() {
@@ -365,7 +397,7 @@ main() {
     install_nmap
     # Check and install nikto
     install_nikto
-    #check and install legion
+    # Check and install legion
     install_legion
     # Check and install OWASP ZAP
     install_owasp_zap
@@ -438,7 +470,7 @@ main() {
                 ;;
             6)
                 legion 
-                ;;                  
+                ;;                
             7)
                  # Call the function
 	         run_owasp_zap
