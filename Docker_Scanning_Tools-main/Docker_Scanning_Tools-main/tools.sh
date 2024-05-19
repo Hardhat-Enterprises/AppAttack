@@ -28,10 +28,8 @@ display_help() {
     echo " - Download: https://github.com/GoVanguard/legion"    
     echo "7) OWASP ZAP: Web application security testing tool"
     echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
-    echo "8) Learning resources: Learn about most common vulnerabilities in web security"
-    echo "   - Access: https://www.linkedin.com/pulse/10-common-web-security-vulnerabilities-bkplussoftware-2wzrc/"
-    echo "9) Help: Display this help menu"
-    echo "10) Exit: Exit the script"
+    echo "8) Help: Display this help menu"
+    echo "9) Exit: Exit the script"
 }
 
 # Function to log messages
@@ -40,21 +38,115 @@ log_message() {
     echo "$(date +"%Y-%m-%d %H:%M:%S") - $message" >> "$LOG_FILE"
 }
 
-# Function to check for updates and update tools
 check_updates() {
     log_message "Checking for updates..."
-     apt update
-     gem update brakeman
-    # Remove existing snyk installation
-     npm uninstall -g snyk
-     npm install -g snyk
+    
+    # Update APT package lists if needed
+    if [ $(sudo find /var/lib/apt/lists -type f -mtime +1 | wc -l) -gt 0 ]; then
+        sudo apt update -qq
+    fi
+    
+    # Update Brakeman
+    update_brakeman
+    
+    # Update Snyk
+    update_snyk
+    
+    # Update OWASP ZAP
+    update_owasp_zap
+    
+    # Update Nikto
+    update_nikto
+    
+    # Update Nmap
+    update_nmap
 }
+
+update_brakeman() {
+    sudo gem update brakeman > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        log_message "Gems already up-to-date: brakeman"
+    else
+        log_message "Failed to update brakeman"
+    fi
+}
+
+update_snyk() {
+    if ! command -v snyk &> /dev/null; then
+        sudo npm install -g --unsafe-perm snyk > /dev/null 2>&1
+        log_message "Snyk installed"
+    else
+        current_version=$(snyk --version)
+        latest_version=$(npm show snyk version)
+        if [ "$current_version" != "$latest_version" ]; then
+            sudo npm install -g --unsafe-perm snyk@latest > /dev/null 2>&1
+            log_message "Snyk updated to version $latest_version"
+        else
+            log_message "Snyk is up-to-date (version $current_version)"
+        fi
+    fi
+}
+
+update_owasp_zap() {
+    if ! command -v zaproxy &> /dev/null; then
+        sudo apt install -y zaproxy > /dev/null 2>&1
+        log_message "OWASP ZAP installed"
+    else
+        current_version=$(dpkg -s zaproxy | grep '^Version:' | awk '{print $2}')
+        latest_version=$(apt-cache policy zaproxy | grep 'Candidate:' | awk '{print $2}')
+        if [ "$current_version" != "$latest_version" ]; then
+            sudo apt install -y zaproxy > /dev/null 2>&1
+            log_message "OWASP ZAP updated to version $latest_version"
+        else
+            log_message "OWASP ZAP is up-to-date (version $current_version)"
+        fi
+    fi
+}
+
+
+update_nikto() {
+    if ! command -v nikto &> /dev/null; then
+        sudo apt install -y nikto > /dev/null 2>&1
+        log_message "Nikto installed"
+    else
+        cd /tmp
+        if [ -d "nikto" ]; then
+            sudo rm -rf nikto
+        fi
+        git clone https://github.com/sullo/nikto.git > /dev/null 2>&1
+        cd nikto/program
+        sudo cp nikto.pl /usr/local/bin/nikto > /dev/null 2>&1
+        sudo chmod +x /usr/local/bin/nikto
+        log_message "Nikto updated"
+    fi
+}
+
+update_nmap() {
+    if ! command -v nmap &> /dev/null; then
+        sudo apt install -y nmap > /dev/null 2>&1
+        log_message "Nmap installed"
+    else
+        current_version=$(nmap --version | head -n 1 | awk '{print $3}')
+        latest_version=$(apt-cache policy nmap | grep 'Candidate:' | awk '{print $2}')
+        if [ "$current_version" != "$latest_version" ]; then
+            sudo apt install -y nmap > /dev/null 2>&1
+            log_message "Nmap updated to version $latest_version"
+        else
+            log_message "Nmap is up-to-date (version $current_version)"
+        fi
+    fi
+}
+
+log_message() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
+}
+
 
 
 # Function to install Go if not installed
 install_go() {
     echo -e "${YELLOW}Installing Go...${NC}"
-     apt update &&  apt install -y golang-go
+    sudo apt update && sudo apt install -y golang-go
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}Go installed successfully!${NC}"
     else
@@ -66,13 +158,58 @@ install_go() {
 # Function to install npm if not installed
 install_npm() {
     echo -e "${YELLOW}Installing npm...${NC}"
-     apt update &&  apt install -y npm
+    sudo apt update && sudo apt install -y npm
     if [ $? -eq 0 ]; then
-         chown -R $(whoami) ~/.npm
+        sudo chown -R $(whoami) ~/.npm
         echo -e "${GREEN}npm installed successfully!${NC}"
     else
         echo -e "${RED}Failed to install npm.${NC}"
         exit 1
+    fi
+}
+
+
+
+install_snyk_cli() {
+    if ! command -v npm &> /dev/null; then
+        install_npm
+    fi
+    if ! command -v snyk &> /dev/null; then
+        echo -e "${YELLOW}Installing snyk cli...${NC}"
+        # Check if snyk file exists, remove it if it does
+        if [ -f /usr/local/bin/snyk ]; then
+            sudo rm /usr/local/bin/snyk
+        fi
+        # Add a short sleep command to ensure the file is removed
+        sleep 1
+        sudo npm install -g snyk
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}Snyk cli installed successfully!${NC}"
+            echo -e "${YELLOW}Authenticating snyk...${NC}"
+            echo -e "${RED}Please authenticate by clicking 'Authenticate' in the browser to continue.${NC}"
+            snyk auth
+        else
+            echo -e "${RED}Failed to install snyk cli.${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${GREEN}snyk cli is already installed.${NC}"
+    fi
+}
+
+# Function to install brakeman
+install_brakeman() {
+    if ! command -v brakeman &> /dev/null; then
+        echo -e "${YELLOW}Installing brakeman...${NC}"
+        sudo gem install brakeman
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}Brakeman installed successfully!${NC}"
+        else
+            echo -e "${RED}Failed to install brakeman.${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${GREEN}brakeman is already installed.${NC}"
     fi
 }
 
@@ -94,54 +231,12 @@ install_osv_scanner() {
     fi
 }
 
-install_snyk_cli() {
-    if ! command -v npm &> /dev/null; then
-        install_npm
-    fi
-    if ! command -v snyk &> /dev/null; then
-        echo -e "${YELLOW}Installing snyk cli...${NC}"
-        # Check if snyk file exists, remove it if it does
-        if [ -f /usr/local/bin/snyk ]; then
-             rm /usr/local/bin/snyk
-        fi
-        # Add a short sleep command to ensure the file is removed
-        sleep 1
-         npm install -g snyk
-        if [ $? -eq 0 ]; then
-            echo -e "${GREEN}Snyk cli installed successfully!${NC}"
-            echo -e "${YELLOW}Authenticating snyk...${NC}"
-            echo -e "${RED}Please authenticate by clicking 'Authenticate' in the browser to continue.${NC}"
-            snyk auth
-        else
-            echo -e "${RED}Failed to install snyk cli.${NC}"
-            exit 1
-        fi
-    else
-        echo -e "${GREEN}snyk cli is already installed.${NC}"
-    fi
-}
-
-# Function to install brakeman
-install_brakeman() {
-    if ! command -v brakeman &> /dev/null; then
-        echo -e "${YELLOW}Installing brakeman...${NC}"
-         gem install brakeman
-        if [ $? -eq 0 ]; then
-            echo -e "${GREEN}Brakeman installed successfully!${NC}"
-        else
-            echo -e "${RED}Failed to install brakeman.${NC}"
-            exit 1
-        fi
-    else
-        echo -e "${GREEN}brakeman is already installed.${NC}"
-    fi
-}
 
 # Function to install nmap
 install_nmap() {
     if ! command -v nmap &> /dev/null; then
         echo -e "${YELLOW}Installing nmap...${NC}"
-         apt update &&  apt install -y nmap
+        sudo apt update && sudo apt install -y nmap
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}nmap installed successfully!${NC}"
         else
@@ -157,7 +252,7 @@ install_nmap() {
 install_nikto() {
     if ! command -v nikto &> /dev/null; then
         echo -e "${YELLOW}Installing nikto...${NC}"
-         apt update &&  apt install -y nikto
+        sudo apt update && sudo apt install -y nikto
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}nikto installed successfully!${NC}"
         else
@@ -172,8 +267,8 @@ install_nikto() {
 install_legion() {
     if ! command -v legion &> /dev/null; then
         echo -e "${YELLOW}Installing LEGION...${NC}"
-         apt update
-         apt install -y legion
+        sudo apt update
+        sudo apt install -y legion
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}LEGION installed successfully!${NC}"
         else
@@ -184,15 +279,15 @@ install_legion() {
         echo -e "${GREEN}LEGION is already installed.${NC}"
     fi
 }
-# Function to install OWASP ZAP
+
 install_owasp_zap() {
-    if ! command -v zap.sh &> /dev/null; then
+    if [ ! -d "/opt/owasp-zap/ZAP_2.15.0" ]; then
         echo -e "${YELLOW}Installing OWASP ZAP...${NC}"
-        wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
+        wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz -P /tmp
         if [ $? -eq 0 ]; then
-            tar -xvf ZAP_2.15.0_Linux.tar.gz
-             rm -rf /opt/owasp-zap/ZAP_2.15.0
-             mv ZAP_2.15.0 /opt/owasp-zap
+            tar -xf /tmp/ZAP_2.15.0_Linux.tar.gz -C /opt/owasp-zap/
+            sudo rm -rf /opt/owasp-zap/ZAP_2.15.0
+            sudo mv /opt/owasp-zap/ZAP_2.15.0 /opt/owasp-zap/
             if [ $? -eq 0 ]; then
                 echo -e "${GREEN}OWASP ZAP installed successfully!${NC}"
             else
@@ -208,67 +303,43 @@ install_owasp_zap() {
     fi
 }
 
-# Function to install Go if not installed
-# Remaining functions...
 
-# Function to run OWASP ZAP and convert HTML report to text
+# Function to run OWASP ZAP
 run_owasp_zap() {
-    local target_url="$1"
-    local output="$2"
-    /opt/owasp-zap/zap.sh -cmd -quickurl "$target_url" -quickout "/home/kali/owasp-zap-results.html"
-    echo -e "${GREEN}OWASP ZAP scan completed.${NC}"
-    log_message "OWASP ZAP scan completed for $target_url"
+    read -p "Enter directory to scan: " directory
+    if [ ! -d "$directory" ]; then
+        echo -e "${RED}Directory not found.${NC}"
+        return 1
+    fi
 
-    # Convert HTML report to text
-    if [ -f "/home/kali/owasp-zap-results.html" ]; then
-        echo -e "${YELLOW}Converting HTML report to text...${NC}"
-        html2text "/home/kali/owasp-zap-results.html" > "/home/kali/owasp-zap-results.txt"
-        if [ $? -eq 0 ]; then
-            echo -e "${GREEN}Conversion successful! Text report saved as /home/kali/owasp-zap-results.txt.${NC}"
-            log_message "OWASP ZAP HTML report converted to text"
-        else
-            echo -e "${RED}Failed to convert HTML report to text.${NC}"
-            log_message "Failed to convert OWASP ZAP HTML report to text"
-        fi
+    echo -e "${YELLOW}Running OWASP ZAP...${NC}"
+    /opt/owasp-zap/ZAP_2.15.0/zap.sh -quickurl "$directory" &
+
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}OWASP ZAP started successfully!${NC}"
     else
-        echo -e "${RED}HTML report not found. Skipping conversion.${NC}"
-        log_message "OWASP ZAP HTML report not found. Skipping conversion."
+        echo -e "${RED}Failed to start OWASP ZAP.${NC}"
+        return 1
     fi
 }
 
-# Function to save vulnerabilities to file
-save_vulnerabilities() {
-    local tool=$1
-    local output_file="$tool-vulnerabilities.txt"
-    case $tool in
-        "osv-scanner")
-            osv-scanner scan "./$directory" > "$output_file"
-            ;;
-        "snyk")
-            snyk code scan > "$output_file"
-            ;;
-        "brakeman")
-             brakeman --force > "$output_file"
-            ;;
-        "nmap")
-            nmap -v -A "$url" > "$output_file"
-            ;;
-        "nikto")
-            nikto -h "$url" > "$output_file"
-            ;;
-        "legion")
-            legion "$url" > "$output_file"
-            ;;
-    esac
-    echo -e "${GREEN}Vulnerabilities found:${NC}"
-    cat "$output_file"
-    read -p "Do you want to save the vulnerabilities to a file? (y/n) " save_to_file
-    if [[ "$save_to_file" == "y" ]]; then
-        echo -e "${GREEN}Vulnerabilities saved to $output_file${NC}"
+   # Function to check for updates
+check_updates() {
+    read -p "Do you want to check for updates? (y/n): " check_updates
+    if [[ "$check_updates" == "y" ]]; then
+        log_message "Checking for updates..."
+        update_brakeman
+        update_snyk
+        update_owasp_zap
+        update_nikto
+        update_nmap
+        echo -e "${GREEN}Updates checked successfully.${NC}"
     else
-        echo -e "${GREEN}Vulnerabilities not saved to a file.${NC}"
+        echo -e "${YELLOW}Skipping updates check.${NC}"
     fi
 }
+    
+    
 
 # Main function to check and install tools
 main() {
@@ -294,19 +365,18 @@ main() {
     install_nmap
     # Check and install nikto
     install_nikto
-    # Check and install LEGION
-    install_legion    
+    #check and install legion
+    install_legion
     # Check and install OWASP ZAP
     install_owasp_zap
     
-   # Check for updates
+     
     check_updates
-
-    # Check if npm is installed and install if not
-    # Remaining checks...
 
     # Display help menu
     display_help
+
+  
     
     while true; do
     # Display help menu
@@ -333,12 +403,8 @@ main() {
             1)
                 read -p "Enter directory to scan: " directory
                 source ~/.bashrc
-                if [[ "$output_to_file" == "y" ]]; then
-                    osv-scanner --recursive "$directory" > $output
-                else
-                    osv-scanner --recursive "$directory"
-                fi
-               ;;
+                osv-scanner --recursive "$directory" > $output
+                ;;
             2)
                 read -p "Select Snyk option:
                 1) Run code test locally
@@ -360,7 +426,7 @@ main() {
                 ;;
             3)
                 read -p "Enter directory to scan (current directory ./): " directory
-                 brakeman $directory --force > $output
+                sudo brakeman $directory --force > $output
                 ;;
             4)
                 read -p "Enter URL or IP address to scan: " url
@@ -372,9 +438,10 @@ main() {
                 ;;
             6)
                 legion 
-                ;;                 
+                ;;                  
             7)
-                run_owasp_zap
+                 # Call the function
+	         run_owasp_zap
                 ;;
             8)
                 echo -e "${YELLOW}Exiting...${NC}"
@@ -384,10 +451,8 @@ main() {
                 display_help
                 ;;
             10)
-                # Learning resources link
-                echo -e "${YELLOW}Learning resources: Learn about most common vulnerabilities in web security${NC}"
-                echo -e "${GREEN}Access: https://www.linkedin.com/pulse/10-common-web-security-vulnerabilities-bkplussoftware-2wzrc/${NC}"
-                ;;
+               check_updates
+               ;;
            
             11)
                 echo -e "${YELLOW}Exiting...${NC}"
@@ -398,6 +463,7 @@ main() {
                 echo -e "${RED}Invalid choice, please try again.${NC}"
                 log_message "Invalid user input"
                 ;;
+                
           
         esac
     done
