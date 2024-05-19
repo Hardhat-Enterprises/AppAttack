@@ -43,18 +43,18 @@ log_message() {
 # Function to check for updates and update tools
 check_updates() {
     log_message "Checking for updates..."
-    sudo apt update
-    sudo gem update brakeman
+     apt update
+     gem update brakeman
     # Remove existing snyk installation
-    sudo npm uninstall -g snyk
-    sudo npm install -g snyk
+     npm uninstall -g snyk
+     npm install -g snyk
 }
 
 
 # Function to install Go if not installed
 install_go() {
     echo -e "${YELLOW}Installing Go...${NC}"
-    sudo apt update && sudo apt install -y golang-go
+     apt update &&  apt install -y golang-go
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}Go installed successfully!${NC}"
     else
@@ -66,9 +66,9 @@ install_go() {
 # Function to install npm if not installed
 install_npm() {
     echo -e "${YELLOW}Installing npm...${NC}"
-    sudo apt update && sudo apt install -y npm
+     apt update &&  apt install -y npm
     if [ $? -eq 0 ]; then
-        sudo chown -R $(whoami) ~/.npm
+         chown -R $(whoami) ~/.npm
         echo -e "${GREEN}npm installed successfully!${NC}"
     else
         echo -e "${RED}Failed to install npm.${NC}"
@@ -102,11 +102,11 @@ install_snyk_cli() {
         echo -e "${YELLOW}Installing snyk cli...${NC}"
         # Check if snyk file exists, remove it if it does
         if [ -f /usr/local/bin/snyk ]; then
-            sudo rm /usr/local/bin/snyk
+             rm /usr/local/bin/snyk
         fi
         # Add a short sleep command to ensure the file is removed
         sleep 1
-        sudo npm install -g snyk
+         npm install -g snyk
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}Snyk cli installed successfully!${NC}"
             echo -e "${YELLOW}Authenticating snyk...${NC}"
@@ -125,7 +125,7 @@ install_snyk_cli() {
 install_brakeman() {
     if ! command -v brakeman &> /dev/null; then
         echo -e "${YELLOW}Installing brakeman...${NC}"
-        sudo gem install brakeman
+         gem install brakeman
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}Brakeman installed successfully!${NC}"
         else
@@ -141,7 +141,7 @@ install_brakeman() {
 install_nmap() {
     if ! command -v nmap &> /dev/null; then
         echo -e "${YELLOW}Installing nmap...${NC}"
-        sudo apt update && sudo apt install -y nmap
+         apt update &&  apt install -y nmap
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}nmap installed successfully!${NC}"
         else
@@ -157,7 +157,7 @@ install_nmap() {
 install_nikto() {
     if ! command -v nikto &> /dev/null; then
         echo -e "${YELLOW}Installing nikto...${NC}"
-        sudo apt update && sudo apt install -y nikto
+         apt update &&  apt install -y nikto
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}nikto installed successfully!${NC}"
         else
@@ -172,8 +172,8 @@ install_nikto() {
 install_legion() {
     if ! command -v legion &> /dev/null; then
         echo -e "${YELLOW}Installing LEGION...${NC}"
-        sudo apt update
-        sudo apt install -y legion
+         apt update
+         apt install -y legion
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}LEGION installed successfully!${NC}"
         else
@@ -191,8 +191,8 @@ install_owasp_zap() {
         wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
         if [ $? -eq 0 ]; then
             tar -xvf ZAP_2.15.0_Linux.tar.gz
-            sudo rm -rf /opt/owasp-zap/ZAP_2.15.0
-            sudo mv ZAP_2.15.0 /opt/owasp-zap
+             rm -rf /opt/owasp-zap/ZAP_2.15.0
+             mv ZAP_2.15.0 /opt/owasp-zap
             if [ $? -eq 0 ]; then
                 echo -e "${GREEN}OWASP ZAP installed successfully!${NC}"
             else
@@ -248,7 +248,7 @@ save_vulnerabilities() {
             snyk code scan > "$output_file"
             ;;
         "brakeman")
-            sudo brakeman --force > "$output_file"
+             brakeman --force > "$output_file"
             ;;
         "nmap")
             nmap -v -A "$url" > "$output_file"
@@ -356,7 +356,7 @@ main() {
                 ;;
             3)
                 read -p "Enter directory to scan (current directory ./): " directory
-                sudo brakeman $directory --force > $output
+                 brakeman $directory --force > $output
                 ;;
             4)
                 read -p "Enter URL or IP address to scan: " url
