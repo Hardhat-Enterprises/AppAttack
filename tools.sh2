@@ -9,6 +9,7 @@ NC='\033[0m' # No Color
 # Define log file
 LOG_FILE="$HOME/security_tools.log"
 
+
 # Function to display help menu
 display_help() {
     echo -e "${YELLOW}Interactive Help Menu:${NC}"
@@ -303,6 +304,12 @@ install_owasp_zap() {
     fi
 }
 
+# Create the target directory if it doesn't exist
+    sudo mkdir -p /opt/owasp-zap
+
+    # Extract the tarball to the target directory
+    sudo tar -xzvf /tmp/ZAP_2.15.0_Linux.tar.gz -C /opt/owasp-zap
+
 
 # Function to run OWASP ZAP
 run_owasp_zap() {
@@ -373,10 +380,6 @@ main() {
      
     check_updates
 
-    # Display help menu
-    display_help
-
-  
     
     while true; do
     # Display help menu
@@ -471,6 +474,5 @@ main() {
 
 # Execute main function
 main
-
 
 
