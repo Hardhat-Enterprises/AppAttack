@@ -40,7 +40,7 @@ export default defineConfig({
 					label: 'Tools Installation',
 					items: [
 						{
-							label: 'Snyk Tool', link: '/guides/Tools Installation/Snyk'
+							label: 'Snyk Tool', link: '/guides/tools-installation/snyk'
 						}
 					]
 				}
