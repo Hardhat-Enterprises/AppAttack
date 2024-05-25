@@ -220,6 +220,13 @@ declare module 'astro:content' {
   collection: "docs";
   data: InferEntrySchema<"docs">
 } & { render(): Render[".md"] };
+"/guides/Tools Installation/Snyk.md": {
+	id: "/guides/Tools Installation/Snyk.md";
+  slug: "/guides/Tools Installation/Snyk";
+  body: string;
+  collection: "docs";
+  data: InferEntrySchema<"docs">
+} & { render(): Render[".md"] };
 };
 
 	};

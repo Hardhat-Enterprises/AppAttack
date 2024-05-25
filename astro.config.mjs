@@ -35,6 +35,14 @@ export default defineConfig({
 							label: 'Miscellaneous', link: '/guides/other-resources/miscellaneous'
 						}
 					]
+				},
+				{
+					label: 'Tools Installation',
+					items: [
+						{
+							label: 'Snyk Tool', link: '/guides/Tools Installation/Snyk'
+						}
+					]
 				}
 			],
 		}),
