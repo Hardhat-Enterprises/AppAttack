@@ -12,10 +12,10 @@
   "dependencies": {
     "@astro-community/astro-embed-youtube": "^0.4.4",
     "@astrojs/starlight": "^0.21.1",
-    "astro": "^4.3.5",
     "sharp": "^0.32.5"
   },
   "devDependencies": {
+    "astro": "^4.9.1",
     "sass": "^1.71.1"
   }
 }
