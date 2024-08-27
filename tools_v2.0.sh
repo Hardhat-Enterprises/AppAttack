@@ -11,9 +11,53 @@ NC='\033[0m'            # No Color  (reset to default)
 # Define the log file path where the script logs messages
 LOG_FILE="$HOME/security_tools.log"
 
-# Function to display a help menu to guide users on using various security tools
-display_help() {
-    echo -e "${YELLOW}Interactive Help Menu:${NC}"
+# Function to display the main menu
+display_main_menu() {
+    echo -e "${YELLOW}Main Menu:${NC}"
+    echo -e "${CYAN}1) Penetration Testing Tools"
+    echo -e "${MAGENTA}2) Secure Code Review Tools"
+    echo -e "${CYAN}3) Step by Step Guide"
+    echo -e "${YELLOW}4) Exit"
+}
+
+# Function to display Penetration Testing Tools menu
+display_penetration_testing_tools_menu() {
+    echo -e "${YELLOW}Penetration Testing Tools:${NC}"
+    echo -e "${CYAN}1) nmap: Network exploration and security auditing tool${NC}"
+    echo "   - A versatile and powerful tool for network discovery and security auditing, widely used for network inventory, managing service upgrade schedules, and monitoring host or service uptime."
+    echo "   - Download: https://nmap.org/download.html"
+    
+    echo -e "${MAGENTA}2) nikto: Web server scanner${NC}"
+    echo "   - An open source web server scanner that performs comprehensive tests against web servers for multiple items, including over 6700 potentially dangerous files/programs and outdated versions."
+    echo "   - Download: https://cirt.net/nikto/"
+    
+    echo -e "${CYAN}3) LEGION: Automated web application security scanner${NC}"
+    echo "   - A toolkit for web application testing that automates the scanning process to identify common vulnerabilities and exposures in web applications."
+    echo "   - Download: https://github.com/GoVanguard/legion"
+    
+    echo -e "${MAGENTA}4) OWASP ZAP: Web application security testing tool${NC}"
+    echo "   - An open-source web application security scanner and testing tool maintained by the OWASP community, used for finding vulnerabilities in web applications."
+    echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
+
+    echo -e "${CYAN}5) John the Ripper: Password cracking tool${NC}"
+    echo "   - A powerful and flexible password cracking tool that supports various encryption algorithms and is used to crack password hashes through brute-force attacks."
+    echo "   - Download: https://www.openwall.com/john/"
+
+    echo -e "${MAGENTA}6) SQLmap: SQL Injection and database takeover tool${NC}"
+    echo "   - An open-source penetration testing tool that automates the process of detecting and exploiting SQL injection vulnerabilities and taking over database servers."
+    echo "   - Download: https://sqlmap.org/"
+
+    echo -e "${CYAN}7) Metasploit Framework: Penetration testing framework${NC}"
+    echo "   - A comprehensive open-source framework for developing, testing, and executing exploits against target systems, widely used for penetration testing and vulnerability assessment."
+    echo "   - Download: https://metasploit.help.rapid7.com/docs/installing-the-metasploit-framework"
+
+    echo -e "${YELLOW}8) Go Back${NC}"
+}
+
+
+# Function to display Secure Code Review Tools menu
+display_secure_code_review_tools_menu() {
+    echo -e "${YELLOW}Secure Code Review Tools:${NC}"
     echo -e "${CYAN}1) osv-scanner: Scan a directory for vulnerabilities${NC}"
     echo "   - A tool for detecting security vulnerabilities in open source projects."
     echo "   - Download: https://github.com/google/osv-scanner"
@@ -25,20 +69,180 @@ display_help() {
     echo -e "${CYAN}3) brakeman: Scan a Ruby on Rails application for security vulnerabilities${NC}"
     echo "   - A static analysis tool specifically designed to find security issues in Ruby on Rails applications."
     echo "   - Download: https://github.com/presidentbeef/brakeman"
-    echo -e "${MAGENTA}4) nmap: Network exploration and security auditing tool${NC}"
-    echo "   - A versatile and powerful tool for network discovery and security auditing, widely used for network inventory, managing service upgrade schedules, and monitoring host or service uptime."
-    echo "   - Download: https://nmap.org/download.html"
-    echo -e "${CYAN}5) nikto: Web server scanner${NC}"
-    echo "   - An open source web server scanner that performs comprehensive tests against web servers for multiple items, including over 6700 potentially dangerous files/programs and outdated versions."
-    echo "   - Download: https://cirt.net/nikto/"
-    echo -e "${MAGENTA}6) LEGION: Automated web application security scanner${NC}"
-    echo "   - A toolkit for web application testing that automates the scanning process to identify common vulnerabilities and exposures in web applications."
-    echo " - Download: https://github.com/GoVanguard/legion"
-    echo -e "${CYAN}7) OWASP ZAP: Web application security testing tool${NC}"
-    echo "   - An open-source web application security scanner and testing tool maintained by the OWASP community, used for finding vulnerabilities in web applications."
-    echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
-    echo -e "${YELLOW}8) Help: Display this help menu${NC}"
-    echo -e "${YELLOW}9) Exit: Exit the script${NC}"
+    echo -e "${YELLOW}4) Go Back"
+}
+
+# Function to display Step by Step Guide menu
+display_step_by_step_guide_menu() {
+    echo -e "${YELLOW}Step by Step Guide:${NC}"
+    echo -e "${CYAN}1) How to Install Tools"
+    echo -e "${MAGENTA}2) How to Perform a Basic Security Audit"
+    echo -e "${YELLOW}3) Go Back"
+}
+
+# Function for Penetration Testing Tools
+handle_penetration_testing_tools() {
+    local choice
+    while true; do
+        display_penetration_testing_tools_menu
+        read -p "Choose an option: " choice
+        case $choice in
+            1) run_nmap ;;
+            2) run_nikto ;;
+            3) run_legion ;;
+            4) run_owasp_zap ;;
+            5) run_john ;;
+            6) run_sqlmap ;;
+            7) run_metasploit ;;
+            8) break ;;
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+        esac
+    done
+}
+
+# Function for Secure Code Review Tools
+handle_secure_code_review_tools() {
+    local choice
+    while true; do
+        display_secure_code_review_tools_menu
+        read -p "Choose an option: " choice
+        case $choice in
+            1) run_osv_scanner ;;
+            2) run_snyk ;;
+            3) run_brakeman ;;
+            4) break ;;
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+        esac
+    done
+}
+
+# Function to run nmap
+run_nmap(){
+    output_file="${output}_nmap"
+    read -p "Enter URL or IP address to scan: " url
+    if [[ "$output_to_file" == "y" ]]; then
+        nmap -oN "$output_file" "$url" 
+    else
+        nmap "$url"
+    fi
+    echo -e "${GREEN} Nmap Operation completed.${NC}"
+}
+
+# Function to run Nikto
+run_nikto() {
+    output_file="${output}_nikto"
+    read -p "Enter URL and port to scan (Example: http://localhost:4200): " url
+    if [[ "$output_to_file" == "y" ]]; then
+        read -p "Enter the output format (txt, html, xml): " format
+        nikto -h "$url" -o "$output_file" -Format "$format"
+    else
+        nikto -h "$url"
+    fi
+    echo -e "${GREEN} Nikto Operation completed.${NC}"
+}
+
+
+# Function to run LEGION
+run_legion(){
+    sudo legion
+    echo -e "${GREEN} Legion Operation completed.${NC}"
+}
+
+# Function to run OWASP ZAP
+run_owasp_zap(){
+    read -p "Enter URL and port to scan (Example: http://localhost:4200): " url          
+    zap -quickurl $url
+    echo -e "${GREEN} OWASP ZAP Operation completed.${NC}"
+}
+
+# Function to run John the Ripper
+run_john() {
+    output_file="${output}_john"
+    read -p "Enter the path to the password file to crack: " password_file
+    if [[ "$output_to_file" == "y" ]]; then
+        john --session="$output_file" "$password_file" > "$output_file" 2>&1
+    else
+        john "$password_file"
+    fi
+    echo -e "${GREEN} John the Ripper operation completed.${NC}"
+}
+
+# Function to run sqlmap
+run_sqlmap() {
+    output_file="${output}_sqlmap"
+    read -p "Enter URL to scan (e.g., http://example.com/vuln.php?id=1): " url
+    if [[ "$output_to_file" == "y" ]]; then
+        sqlmap -u "$url" --output-dir="$output_file" > "$output_file/sqlmap_output.txt" 2>&1
+    else
+        sqlmap -u "$url"
+    fi
+    echo -e "${GREEN} SQLmap operation completed.${NC}"
+}
+
+# Function to run Metasploit
+run_metasploit() {
+    output_file="${output}_metasploit"
+    if [[ "$output_to_file" == "y" ]]; then
+        sudo msfconsole | tee "$output_file.txt"
+    else
+        sudo msfconsole 
+    fi
+    echo -e "${GREEN} Metasploit operation completed.${NC}"
+}
+
+# Function to run osv-scanner
+run_osv_scanner(){
+    output_file="${output}_osv_scanner"
+    read -p "Enter directory to scan: " directory
+    source ~/.bashrc
+    if [[ "$output_to_file" == "y" ]]; then
+        osv-scanner --format table --output "$output_file" -r "$directory"  
+	else
+    	osv-scanner --recursive "$directory"
+	fi
+    echo -e "${GREEN} OSV-Scanner Operation completed.${NC}"
+}
+
+# Function to run snyk cli
+run_snyk(){
+    output_file="${output}_snyk"
+    read -p "Select Snyk option:
+    1) Run code test locally
+    2) Monitor for vulnerabilities and see results in Snyk UI
+    Enter your choice (1/2): " snyk_option
+    case $snyk_option in
+        1)   if [[ "$output_to_file" == "y" ]]; then
+            read -p "Enter directory to scan (current directory ./): " directory
+            snyk code test $directory > $output_file
+            else
+                    read -p "Enter directory to scan (current directory ./): " directory
+                            snyk code test $directory
+            fi
+         ;;
+        2) if [[ "$output_to_file" == "y" ]]; then
+            read -p "Enter directory to scan (current directory ./): " directory
+            snyk monitor $directory --all-projects > $output_file
+            else
+            snyk monitor $directory --all-projects
+            fi
+            echo -e "${GREEN} SNYK Operation completed.${NC}"
+            ;;
+        *)
+            echo -e "${RED}Invalid choice!${NC}"
+            ;;
+        esac
+}
+
+# Function to run Brakeman
+run_brakeman(){
+    output_file="${output}_brakeman"
+    read -p "Enter directory to scan (current directory ./): " directory
+    if [[ "$output_to_file" == "y" ]]; then
+        sudo brakeman "$directory" --force  -o "$output_file"
+    else
+        sudo brakeman "$directory" --force
+    fi
+        echo -e "${GREEN} Brakeman Operation completed.${NC}"
 }
 
 # Function to log messages with a timestamp to the log file
@@ -62,6 +266,9 @@ check_updates() {
     update_owasp_zap
     update_nikto
     update_nmap
+    update_john
+    update_sqlmap
+    update_metasploit
 }
 
 # Function to update Brakeman (a security scanner for Ruby on Rails applications)
@@ -127,11 +334,75 @@ update_nmap() {
     fi
 }
 
-log_message() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
+# Function to update John the Ripper (a password cracking tool)
+update_john() {
+    if ! command -v john &> /dev/null; then
+        echo -e "${MAGENTA}Installing John the Ripper...${NC}"
+        sudo apt install -y john > /dev/null 2>&1
+        log_message "John the Ripper installed"
+    else
+        # Get the current installed version using the package manager
+        current_version=$(dpkg-query -W -f='${Version}' john 2>/dev/null)
+        # Get the latest available version
+        latest_version=$(apt-cache policy john | grep 'Candidate:' | awk '{print $2}')
+
+        if [ "$current_version" != "$latest_version" ]; then
+            echo -e "${MAGENTA}Updating John the Ripper...${NC}"
+            sudo apt install -y john > /dev/null 2>&1
+            log_message "John the Ripper updated to version $latest_version"
+        else
+            log_message "John the Ripper is up-to-date (version $current_version)"
+        fi
+    fi
 }
 
+# Function to update sqlmap
+update_sqlmap() {
+    if ! command -v sqlmap &> /dev/null; then
+        echo -e "${MAGENTA}sqlmap is not installed. Installing sqlmap...${NC}"
+        sudo apt update && sudo apt install -y sqlmap
+        log_message "sqlmap installed"
+    else
+        # Check if sqlmap needs an update
+        output=$(sqlmap 2>&1)
+        if echo "$output" | grep -q "you haven't updated sqlmap"; then
+            echo -e "${MAGENTA}sqlmap update available. Updating...${NC}"
+            sudo sqlmap --update
+            log_message "sqlmap updated"
+        elif echo "$output" | grep -q "your sqlmap version is outdated"; then
+            echo -e "${MAGENTA}sqlmap version is outdated. Updating...${NC}"
+            sudo sqlmap --update
+            log_message "sqlmap updated"
+        else
+            log_message "sqlmap is up-to-date"
+        fi
+    fi
+}
 
+# Function to update Metasploit Framework
+update_metasploit() {
+    if ! command -v msfconsole &> /dev/null; then
+        sudo apt update
+        sudo apt install -y metasploit-framework > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            log_message "Metasploit Framework installed"
+        else
+            log_message "Failed to install Metasploit Framework"
+            exit 1
+        fi
+    else
+        # Check the installed version against the latest available version
+        current_version=$(msfconsole --version | head -n 1 | awk '{print $3}')
+        latest_version=$(apt-cache policy metasploit-framework | grep 'Candidate:' | awk '{print $2}')
+        if [ "$current_version" != "$latest_version" ]; then
+            sudo apt update
+            sudo apt install -y metasploit-framework > /dev/null 2>&1
+            log_message "Metasploit Framework updated to version $latest_version"
+        else
+            log_message "Metasploit Framework is up-to-date (version $current_version)"
+        fi
+    fi
+}
 
 # Function to install Go (programming language) if not already installed
 install_go() {
@@ -307,6 +578,54 @@ install_owasp_zap() {
     fi
 }
 
+# Function to install John the Ripper if not already installed
+install_john() {
+    if ! command -v john &> /dev/null; then
+        echo -e "${MAGENTA}Installing John the Ripper...${NC}"
+        sudo apt update && sudo apt install -y john
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}John the Ripper installed successfully!${NC}"
+        else
+            echo -e "${RED}Failed to install John the Ripper.${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${GREEN}John the Ripper is already installed.${NC}"
+    fi
+}
+
+# Function to install sqlmap if not already installed
+install_sqlmap() {
+    if ! command -v sqlmap &> /dev/null; then
+        echo -e "${MAGENTA}Installing sqlmap...${NC}"
+        sudo apt update && sudo apt install -y sqlmap
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}sqlmap installed successfully!${NC}"
+        else
+            echo -e "${RED}Failed to install sqlmap.${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${GREEN}sqlmap is already installed.${NC}"
+    fi
+}
+
+# Function to install Metasploit if not already installed
+install_metasploit() {
+    if ! command -v msfconsole &> /dev/null; then
+        echo -e "${MAGENTA}Installing Metasploit...${NC}"
+        sudo apt update && sudo apt install -y metasploit-framework
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}Metasploit installed successfully!${NC}"
+        else
+            echo -e "${RED}Failed to install Metasploit.${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${GREEN}Metasploit is already installed.${NC}"
+    fi
+}
+
 # Function to check for updates
 check_updates() {
     # Prompt user to check for updates
@@ -319,6 +638,9 @@ check_updates() {
         update_owasp_zap
         update_nikto
         update_nmap
+        update_john
+        update_sqlmap
+        update_metasploit
         # Display success message
         echo -e "${GREEN}Updates checked successfully.${NC}"
     else
@@ -345,7 +667,7 @@ save_vulnerabilities() {
             ;;
         "brakeman")
             # Run brakeman scan and save output to the file
-            sudo brakeman --force"$output_file"
+            sudo brakeman --force > "$output_file"
             ;;
         "nmap")
             # Run nmap scan and save output to the file
@@ -358,6 +680,22 @@ save_vulnerabilities() {
         "legion")
             # Run legion scan and save output to the file
             legion "$url" > "$output_file"
+            ;;
+        "john")
+            # Run John the Ripper and save output to the file
+            john --show --format=raw-md5 "$input_file" > "$output_file"
+            ;;
+        "sqlmap")
+            # Run SQLmap scan and save output to the file
+            sqlmap -u "$url" --batch --output-dir="$output_dir" > "$output_file"
+            ;;
+        "metasploit")
+            # Run Metasploit scan and save output to the file
+            msfconsole -x "use auxiliary/scanner/portscan/tcp; set RHOSTS $url; run; exit" > "$output_file"
+            ;;
+        *)
+            echo -e "${RED}Unsupported tool: $tool${NC}"
+            return 1
             ;;
     esac
     # Display the found vulnerabilities
@@ -372,7 +710,7 @@ save_vulnerabilities() {
         # Display message indicating the file was not saved
         echo -e "${GREEN}Vulnerabilities not saved to a file.${NC}"
     fi
-}    
+}
 
 # Main function to check and install tools
 main() {
@@ -402,155 +740,34 @@ main() {
     install_legion
     # Check and install OWASP ZAP
     install_owasp_zap
+    # Check and install John
+    install_john
+    # Check and install sqlmap
+    install_sqlmap
+    # Check and install metasploit
+    install_metasploit
     
     # Check for updates for the installed tools
     check_updates
 
-    # Start an infinite loop to keep the script running until the user exits
-    while true; do
-    # Display help menu
-    display_help
-
-    # Prompt the user to choose an option from the menu
-    read -p "Choose an option: " choice
-    
-    output=""
-    # If the choice is not legion, ZAP, or help, ask the user if they want to save the results to a text file
-    if [[ "$choice" -ne 6 && "$choice" -ne "9" && "$choice" -ne "7" ]]; then
-        read -p "Do you want to output the results to a text file? Results are saved to /home/kali (y/n): " output_to_file
-        if [[ "$output_to_file" == "y" ]]; then
-            case $choice in
-                1) output="/home/kali/osv-scanner-results.txt" ;;  # Set the output file for osv-scanner
-                2) output="/home/kali/snyk-results.txt" ;;         # Set the output file for snyk
-                3) output="/home/kali/brakeman-results.txt" ;;     # Set the output file for brakeman
-                4) output="/home/kali/nmap-results.txt" ;;         # Set the output file for nmap
-                5) output="/home/kali/nikto-results.txt" ;;        # Set the output file for nikto
-                
-            esac
-        fi
+    # Ask if the user wants to output to a file
+    read -p "Do you want to output results to a file? (y/n): " output_to_file
+    if [[ "$output_to_file" == "y" ]]; then
+        read -p "Enter the output file path: " output
     fi
-        # Handle the user's choice
-        case $choice in
-            1)
-                # Run osv-scanner on the specified directory
-                read -p "Enter directory to scan: " directory
-                source ~/.bashrc
-                if [[ "$output_to_file" == "y" ]]; then
-    
-                        osv-scanner --format table --output "$output" -r "$directory"
-                        echo -e "${GREEN}Operation completed.${NC}"
-                else
-                        osv-scanner --recursive "$directory"
-                        echo -e "${GREEN}Operation completed.${NC}"
-                fi
-                ;;
-            2)
-                # Run Snyk tests based on the user's choice
-                read -p "Select Snyk option:
-                1) Run code test locally
-                2) Monitor for vulnerabilities and see results in Snyk UI
-                Enter your choice (1/2): " snyk_option
-                case $snyk_option in
-                    1)   if [[ "$output_to_file" == "y" ]]; then
-                                read -p "Enter directory to scan (current directory ./): " directory
-                                snyk code test $directory > $output
-                                echo -e "${GREEN}Operation completed.${NC}"
-                        else
-                                read -p "Enter directory to scan (current directory ./): " directory
-                                snyk code test $directory
-                                echo -e "${GREEN}Operation completed.${NC}"
-                        fi
-                                                    
-                        ;;
-                    2) if [[ "$output_to_file" == "y" ]]; then
-                            read -p "Enter directory to scan (current directory ./): " directory
-                            snyk monitor $directory --all-projects > $output
-                            echo -e "${GREEN}Operation completed.${NC}"
-                        else
-                            snyk monitor $directory --all-projects
-                            echo -e "${GREEN}Operation completed.${NC}"
-                        fi
-                        ;;
-                    *)
-                        # Handle invalid Snyk option choice
-                        echo -e "${RED}Invalid choice!${NC}"
-                        ;;
-                esac
-                ;;
-            3)
-                # Run Brakeman on the specified directory
-                read -p "Enter directory to scan (current directory ./): " directory
-                if [[ "$output_to_file" == "y" ]]; then
-                    sudo brakeman "$directory" --force  -o "$output"
-                    echo -e "${GREEN}Operation completed.${NC}"
-                else
-                    sudo brakeman "$directory" --force
-                    echo -e "${GREEN}Operation completed.${NC}"
-                fi
-                ;;
-            4)
-                # Run Nmap on the specified URL or IP address
-                read -p "Enter URL or IP address to scan: " url
-                if [[ "$output_to_file" == "y" ]]; then
-                    nmap -oN "$output" "$url" 
-                    echo -e "${GREEN}Operation completed.${NC}"
-                else
-                    nmap "$url"
-                    echo -e "${GREEN}Operation completed.${NC}"
-                fi
-                ;;
-            5)
-                # Run Nikto on the specified URL and port
-                read -p "Enter URL and port to scan (Example: http://localhost:4200): " url
-                if [[ "$output_to_file" == "y" ]]; then
-                    nikto -h "$url" -o "$output"
-                    echo -e "${GREEN}Operation completed.${NC}"
-                else
-                    nikto -h "$url"
-                    echo -e "${GREEN}Operation completed.${NC}"
-                fi
-                ;;
-            6)
-                # Launch Legion
-                sudo legion 
-                echo -e "${GREEN}Operation completed.${NC}"
-                ;;   
-                             
-            7) 
-                # Run OWASP ZAP on the specified URL
-                read -p "Enter URL and port to scan (Example: http://localhost:4200): " url
-            	zap -quickurl $url 
-                echo -e "${GREEN}Operation completed.${NC}"
-                ;;
-            8)   
-                # Display help menu
-                display_help
-                ;;
-                
-            9) 
-                # Exit the script
-                echo -e "${YELLOW}Exiting...${NC}"
-                exit 0
-                ;;
-                
-            10)
-               # Check for updates for the installed tools
-               check_updates
-               ;;
-           
-            11)
-                # Exit the script with a log message
-                echo -e "${YELLOW}Exiting...${NC}"
+
+    while true; do
+        display_main_menu
+        read -p "Choose an option: " main_choice
+        case $main_choice in
+            1) handle_penetration_testing_tools ;;
+            2) handle_secure_code_review_tools ;;
+            3) display_step_by_step_guide_menu ;;
+            4) echo -e "${YELLOW}Exiting...${NC}"
                 log_message "Script ended"
-                exit 0
-                ;;
-            12)
-                # Handle invalid user input
-                echo -e "${RED}Invalid choice, please try again.${NC}"
-                log_message "Invalid user input"
-                ;;
-                
-          
+               exit 0 ;;
+            *) echo -e "${RED}Invalid choice, please try again.${NC}"
+                log_message "Invalid user input" ;;
         esac
     done
 }
