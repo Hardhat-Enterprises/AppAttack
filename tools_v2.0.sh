@@ -75,7 +75,7 @@ display_secure_code_review_tools_menu() {
 # Function to display Step by Step Guide menu
 display_step_by_step_guide_menu() {
     echo -e "${YELLOW}Step by Step Guide:${NC}"
-    echo -e "${CYAN}1) How to Install Tools"
+    echo -e "${CYAN}1) How to Use Tools"
     echo -e "${MAGENTA}2) How to Perform a Basic Security Audit"
     echo -e "${YELLOW}3) Go Back"
 }
