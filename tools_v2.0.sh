@@ -69,8 +69,12 @@ display_secure_code_review_tools_menu() {
     echo -e "${CYAN}3) brakeman: Scan a Ruby on Rails application for security vulnerabilities${NC}"
     echo "   - A static analysis tool specifically designed to find security issues in Ruby on Rails applications."
     echo "   - Download: https://github.com/presidentbeef/brakeman"
-    echo -e "${YELLOW}4) Go Back"
+    echo -e "${MAGENTA}4) bandit: Security linter for Python code${NC}"
+    echo "   - A tool designed to find common security issues in Python code."
+    echo "   - Download: https://bandit.readthedocs.io/en/latest/"
+    echo -e "${YELLOW}5) Go Back"
 }
+
 
 # Function to display Step by Step Guide menu
 display_step_by_step_guide_menu() {
@@ -110,11 +114,13 @@ handle_secure_code_review_tools() {
             1) run_osv_scanner ;;
             2) run_snyk ;;
             3) run_brakeman ;;
-            4) break ;;
+            4) run_bandit ;;
+            5) break ;;
             *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
         esac
     done
 }
+
 
 # Function to run nmap
 run_nmap(){
@@ -127,6 +133,19 @@ run_nmap(){
     fi
     echo -e "${GREEN} Nmap Operation completed.${NC}"
 }
+
+# Function to run Bandit
+run_bandit(){
+    output_file="${output}_bandit"
+    read -p "Enter the directory to scan: " directory
+    if [[ "$output_to_file" == "y" ]]; then
+        bandit -r "$directory" -o "$output_file" -f txt
+    else
+        bandit -r "$directory"
+    fi
+    echo -e "${GREEN} Bandit operation completed.${NC}"
+}
+
 
 # Function to run Nikto
 run_nikto() {
@@ -356,6 +375,16 @@ update_john() {
     fi
 }
 
+# Function to update bandit
+update_bandit() {
+    pip install --upgrade bandit > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        log_message "Bandit updated successfully"
+    else
+        log_message "Failed to update Bandit"
+    fi
+}
+
 # Function to update sqlmap
 update_sqlmap() {
     if ! command -v sqlmap &> /dev/null; then
@@ -413,6 +442,21 @@ install_go() {
     else
         echo -e "${RED}Failed to install Go.${NC}"
         exit 1
+    fi
+}
+
+install_bandit() {
+    if ! command -v bandit &> /dev/null; then
+        echo -e "${CYAN}Installing Bandit...${NC}"
+        sudo pip install bandit
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}Bandit installed successfully!${NC}"
+        else
+            echo -e "${RED}Failed to install Bandit.${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${GREEN}Bandit is already installed.${NC}"
     fi
 }
 
@@ -635,6 +679,7 @@ check_updates() {
         # Log message indicating update check
         log_message "Checking for updates..."
         update_brakeman
+        update_bandit
         update_owasp_zap
         update_nikto
         update_nmap
@@ -732,6 +777,8 @@ main() {
     install_snyk_cli
     # Check and install brakeman
     install_brakeman
+    # Check and install bandit
+    install_bandit
     # Check and install nmap
     install_nmap
     # Check and install nikto
