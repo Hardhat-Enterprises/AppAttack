@@ -72,7 +72,9 @@ display_secure_code_review_tools_menu() {
     echo -e "${MAGENTA}4) bandit: Security linter for Python code${NC}"
     echo "   - A tool designed to find common security issues in Python code."
     echo "   - Download: https://bandit.readthedocs.io/en/latest/"
-    echo -e "${CYAN}5) SonarQube${NC}"
+    echo -e "${CYAN}5) SonarQube: Continuous inspection of code quality and security${NC}"
+    echo "   - An open-source platform for continuous inspection of code quality and security to detect bugs, vulnerabilities, and code smells."
+    echo "   - Download: https://www.sonarqube.org/downloads/"
     echo -e "${YELLOW}6) Go Back"
 }
 
