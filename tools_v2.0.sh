@@ -72,7 +72,8 @@ display_secure_code_review_tools_menu() {
     echo -e "${MAGENTA}4) bandit: Security linter for Python code${NC}"
     echo "   - A tool designed to find common security issues in Python code."
     echo "   - Download: https://bandit.readthedocs.io/en/latest/"
-    echo -e "${YELLOW}5) Go Back"
+    echo -e "${CYAN}5) SonarQube${NC}"
+    echo -e "${YELLOW}6) Go Back"
 }
 
 
@@ -115,7 +116,8 @@ handle_secure_code_review_tools() {
             2) run_snyk ;;
             3) run_brakeman ;;
             4) run_bandit ;;
-            5) break ;;
+            5) run_sonarqube ;;
+            6) break ;;
             *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
         esac
     done
@@ -146,6 +148,16 @@ run_bandit(){
     echo -e "${GREEN} Bandit operation completed.${NC}"
 }
 
+run_sonarqube()
+{
+  echo -e "${CYAN}Running SonarQube container...${NC}"
+  sudo docker run -d --name sonarqube -p 9001:9000 sonarqube
+
+  echo -e "${GREEN}SonarQube is running at http://localhost:9001${NC}"
+  echo "Default credentials: "
+  echo "login: admin"
+  echo "password: admin"
+}
 
 # Function to run Nikto
 run_nikto() {
@@ -442,6 +454,22 @@ install_go() {
     else
         echo -e "${RED}Failed to install Go.${NC}"
         exit 1
+    fi
+}
+
+install_sonarqube() {
+    # Check if SonarQube Docker container is already installed
+    if ! sudo docker images | grep -q sonarqube; then
+        echo -e "${CYAN}Pulling SonarQube Docker image...${NC}"
+        sudo docker pull sonarqube
+
+        echo -e "${CYAN}Downloading and installing SonarScanner...${NC}"
+        wget -O sonarscanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux-x64.zip?_gl=1*1vsu6fm*_gcl_au*MTA1MTc2MzQ4NS4xNzI1NTQ4Njcw*_ga*MTIzMjQ3ODQ1OC4xNzI1NTQ4Njcw*_ga_9JZ0GZ5TC6*MTcyNTU0ODY3MC4xLjEuMTcyNTU0OTY2MS42MC4wLjA.
+        sudo unzip sonarscanner-cli.zip -d /opt/sonarscanner
+
+        echo -e "${GREEN}SonarQube and SonarScanner installed successfully!${NC}"
+    else
+        echo -e "${GREEN}SonarQube is already installed.${NC}"
     fi
 }
 
@@ -793,6 +821,8 @@ main() {
     install_sqlmap
     # Check and install metasploit
     install_metasploit
+    # install sonarqube
+    install_sonarqube
     
     # Check for updates for the installed tools
     check_updates
