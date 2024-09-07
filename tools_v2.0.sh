@@ -526,15 +526,8 @@ run_bandit(){
     echo -e "${GREEN} Bandit operation completed.${NC}"
 }
 
-#Function to run SonarQube
 run_sonarqube()
 {
-    # Check if SonarQube Docker container is already running or exists
-    if sudo docker ps -a --format '{{.Names}}' | grep -w "sonarqube" > /dev/null; then
-        echo -e "${YELLOW}A container named 'sonarqube' already exists. Removing the existing container...${NC}"
-        sudo docker rm -f sonarqube
-    fi
-
     echo -e "${CYAN}Running SonarQube container...${NC}"
     sudo docker run -d --name sonarqube -p 9001:9000 sonarqube
     
@@ -851,10 +844,7 @@ install_sonarqube() {
         echo -e "${CYAN}Downloading and installing SonarScanner...${NC}"
         wget -O sonarscanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux-x64.zip?_gl=1*1vsu6fm*_gcl_au*MTA1MTc2MzQ4NS4xNzI1NTQ4Njcw*_ga*MTIzMjQ3ODQ1OC4xNzI1NTQ4Njcw*_ga_9JZ0GZ5TC6*MTcyNTU0ODY3MC4xLjEuMTcyNTU0OTY2MS42MC4wLjA.
         sudo unzip sonarscanner-cli.zip -d /opt/sonarscanner
-        # Add Path to bashrc
-        echo 'export PATH=$PATH:/opt/sonarscanner/sonar-scanner-6.1.0.4477-linux-x64/bin' >> ~/.bashrc
-        source ~/.bashrc
-
+        
         echo -e "${GREEN}SonarQube and SonarScanner installed successfully!${NC}"
     else
         echo -e "${GREEN}SonarQube is already installed.${NC}"
