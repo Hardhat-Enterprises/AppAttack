@@ -507,10 +507,12 @@ run_nmap(){
     output_file="${output}_nmap"
     read -p "Enter URL or IP address to scan: " url
     if [[ "$output_to_file" == "y" ]]; then
-        nmap -oN "$output_file" "$url"
+        nmap_output=$(nmap -oN "$output_file" "$url")
     else
+        nmap_output=$(nmap "$url")
         nmap "$url"
     fi
+    generate_ai_insights "$nmap_output"
     echo -e "${GREEN} Nmap Operation completed.${NC}"
 }
 
@@ -550,10 +552,13 @@ run_nikto() {
     read -p "Enter URL and port to scan (Example: http://localhost:4200): " url
     if [[ "$output_to_file" == "y" ]]; then
         read -p "Enter the output format (txt, html, xml): " format
-        nikto -h "$url" -o "$output_file" -Format "$format"
+        nikto_output=$(nikto -h "$url" -o "$output_file" -Format "$format")
+    echo "$nikto_output" > "$output"
     else
+        nikto_output=$(nikto -h "$url")
         nikto -h "$url"
     fi
+    generate_ai_insights "$nikto_output"
     echo -e "${GREEN} Nikto Operation completed.${NC}"
 }
 
@@ -612,10 +617,13 @@ run_osv_scanner(){
     read -p "Enter directory to scan: " directory
     source ~/.bashrc
     if [[ "$output_to_file" == "y" ]]; then
-        osv-scanner --format table --output "$output_file" -r "$directory"
+        osv_output=$(osv-scanner --format table --output "$output_file" -r "$directory")
+    echo "$osv_output" > "$output"
     else
+        osv_output=$(osv-scanner --recursive "$directory")
         osv-scanner --recursive "$directory"
     fi
+    generate_ai_insights "$osv_output"
     echo -e "${GREEN} OSV-Scanner Operation completed.${NC}"
 }
 
@@ -629,17 +637,24 @@ run_snyk(){
     case $snyk_option in
         1)   if [[ "$output_to_file" == "y" ]]; then
                 read -p "Enter directory to scan (current directory ./): " directory
-                snyk code test $directory > $output_file
+                snyk_output=$(snyk code test $directory)
+            echo "$snyk_output" > $output_file
+                echo -e "${GREEN} SNYK Operation completed.${NC}"
             else
                 read -p "Enter directory to scan (current directory ./): " directory
                 snyk code test $directory
+                snyk_output=$(snyk code test $directory)
+                echo -e "${GREEN} SNYK Operation completed.${NC}"
             fi
         ;;
         2) if [[ "$output_to_file" == "y" ]]; then
                 read -p "Enter directory to scan (current directory ./): " directory
-                snyk monitor $directory --all-projects > $output_file
+                snyk_output=$(snyk monitor $directory --all-projects > $output_file)
+                echo "$snyk_output" > "$output"
+                echo -e "${GREEN} SNYK Operation completed.${NC}"
             else
-                snyk monitor $directory --all-projects
+                snyk_output=$(snyk monitor $directory --all-projects)
+                echo -e "${GREEN} SNYK Operation completed.${NC}"
             fi
             echo -e "${GREEN} SNYK Operation completed.${NC}"
         ;;
@@ -647,6 +662,8 @@ run_snyk(){
             echo -e "${RED}Invalid choice!${NC}"
         ;;
     esac
+    generate_ai_insights "$snyk_output"
+    echo -e "${GREEN} SNYK Operation completed.${NC}"
 }
 
 # Function to run Brakeman
@@ -654,10 +671,12 @@ run_brakeman(){
     output_file="${output}_brakeman"
     read -p "Enter directory to scan (current directory ./): " directory
     if [[ "$output_to_file" == "y" ]]; then
-        sudo brakeman "$directory" --force  -o "$output_file"
+        brakeman_output=$(sudo brakeman "$directory" --force  -o "$output_file")
     else
+        brakeman_output=$(sudo brakeman "$directory" --force)
         sudo brakeman "$directory" --force
     fi
+    generate_ai_insights "$brakeman_output"
     echo -e "${GREEN} Brakeman Operation completed.${NC}"
 }
 
@@ -686,6 +705,8 @@ check_updates() {
     update_sqlmap
     update_metasploit
 }
+
+
 
 # Function to update Brakeman (a security scanner for Ruby on Rails applications)
 update_brakeman() {
@@ -1111,6 +1132,19 @@ check_updates() {
     fi
 }
 
+install_generate_ai_insights_dependencies() {
+    # Check if jq is installed
+    if ! command -v jq &> /dev/null; then
+        echo -e "${MAGENTA}Intalling generate AI insights dependencies...${NC}"
+        
+        # Update package list and install jq
+        sudo apt-get update
+        sudo apt-get install -y jq
+    else
+        echo -e "${GREEN}Generate AI insights dependencies are already installed.${NC}"
+    fi
+}
+
 # Function to save vulnerabilities found by various tools to a file
 save_vulnerabilities() {
     # Set the tool name to the first argument
@@ -1174,6 +1208,57 @@ save_vulnerabilities() {
     fi
 }
 
+# Function to get and print AI-generated insights based on tool outputs
+generate_ai_insights() {
+    local output="$1" #tool output
+    local output_to_file="$2" #output to file (either y or n)
+    local output_file="$3" #output file directory
+    
+    read -p "Do you want to get AI-generated insights on the scan? (y/n): " ai_insights
+
+    if [[ "$ai_insights" == "y" ]]; then
+        # Use existing Google Gemini API key or replace with your own one
+        API_KEY="AIzaSyBaGoV4EC9vhhypqeB5lG1OEkT-SsT_1tw"
+
+        # Format the data for the Gemini API
+        PROMPT="Analyze this output and provide insights: $output"
+        
+	# Call Gemini API using curl
+	RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$API_KEY" \
+	-H "Content-Type: application/json" \
+	-d '{
+	"contents": [
+	  {
+	    "parts": [
+	      {
+		"text": "'"$PROMPT"'"
+	      }
+	    ]
+	  }
+	]
+	}')
+	
+	#Uncomment below for debugging
+	#echo "Response:"
+	#echo "$RESPONSE"
+	
+        # Extract the insights from the API response
+        INSIGHTS=$(echo $RESPONSE | jq -r '.candidates[0].content.parts[0].text')
+        
+        # Append the AI-generated insights to the Nmap output file if saved to file
+	if [[ "$output_to_file" == "y" ]]; then
+	    echo -e "\nAI-Generated Insights:\n$INSIGHTS" >> "$output_file"
+	else
+	    # Display the AI-generated insights
+            echo -e "+-----------------------------+"
+	    echo -e "| Insights                    |"
+	    echo -e "+-----------------------------+"
+	    echo -e "$INSIGHTS"
+	    echo -e "+-----------------------------+"
+        fi
+    fi
+}    
+
 # Main function to check and install tools
 main() {
     
@@ -1204,6 +1289,8 @@ main() {
     install_legion
     # Check and install OWASP ZAP
     install_owasp_zap
+    # Check and install generate_ai_insights dependencies
+    install_generate_ai_insights_dependencies
     # Check and install John
     install_john
     # Check and install sqlmap
