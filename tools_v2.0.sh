@@ -1,5 +1,38 @@
 #!/bin/bash
 
+# Reset
+Color_Off='\033[0m'       # Text Reset
+
+# Regular Colors
+Red='\033[0;31m'          # Red
+Green='\033[0;32m'        # Green
+Yellow='\033[0;33m'       # Yellow
+Blue='\033[0;34m'         # Blue
+Purple='\033[0;35m'       # Purple
+Cyan='\033[0;36m'         # Cyan
+White='\033[0;37m'        # White
+
+# Bold Colors
+BRed='\033[1;31m'         # Bold Red
+BGreen='\033[1;32m'       # Bold Green
+BYellow='\033[1;33m'      # Bold Yellow
+BBlue='\033[1;34m'        # Bold Blue
+BPurple='\033[1;35m'      # Bold Purple
+BCyan='\033[1;36m'        # Bold Cyan
+BWhite='\033[1;37m'       # Bold White
+
+# Display the Banner
+echo -e "${BYellow}                                                                           ${Color_Off}"
+echo -e "${BRed} █████╗ ██████╗ ██████╗     █████╗ ████████╗████████╗ █████╗  ██████╗██╗  ██╗${Color_Off}"
+echo -e "${BRed}██╔══██╗██╔══██╗██╔══██╗   ██╔══██╗╚══██╔══╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝${Color_Off}"
+echo -e "${BGreen}███████║██████╔╝██████╔╝   ███████║   ██║      ██║   ███████║██║     █████╔╝ ${Color_Off}"
+echo -e "${BGreen}██╔══██║██╔═══╝ ██╔═══╝    ██╔══██║   ██║      ██║   ██╔══██║██║     ██╔═██╗ ${Color_Off}"
+echo -e "${BBlue}██║  ██║██║     ██║        ██║  ██║   ██║      ██║   ██║  ██║╚██████╗██║  ██╗${Color_Off}"
+echo -e "${BBlue}╚═╝  ╚═╝╚═╝     ╚═╝        ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝${Color_Off}"
+echo -e "${BYellow}                                                                           ${Color_Off}"
+echo -e "${BPurple}              A Professional Pen-Testing/Secure Code Review Toolkit        ${Color_Off}"
+#echo -e "${BCyan}Usage:${Color_Off} ./app-attack.sh [options]"
+
 # Define color codes for formatted output in the terminal
 RED='\033[0;31m'        # Red color
 GREEN='\033[0;32m'      # Green color
@@ -7,46 +40,51 @@ YELLOW='\033[1;33m'     # Yellow color
 CYAN='\033[0;36m'       # Cyan color
 MAGENTA='\033[0;35m'    # Magenta color
 NC='\033[0m'            # No Color  (reset to default)
-BLUE='\033[1;94m'
 
 # Define the log file path where the script logs messages
 LOG_FILE="$HOME/security_tools.log"
 
 # Function to display the main menu
 display_main_menu() {
-    display_asterisk
     echo -e "${YELLOW}Main Menu:${NC}"
     echo -e "${CYAN}1) Penetration Testing Tools"
     echo -e "${MAGENTA}2) Secure Code Review Tools"
     echo -e "${CYAN}3) Step by Step Guide"
     echo -e "${YELLOW}4) Exit"
-    display_asterisk
-}
-
-# Function to display asterisks in order to make the display uncluttered.
-display_asterisk(){
-
-    echo -e "${YELLOW}"
-    # Using a loop
-    for i in {1..100}; do
-        echo -n "*"
-    done
-    echo  # Move to the next line after printing all asterisks
-    
 }
 
 # Function to display Penetration Testing Tools menu
 display_penetration_testing_tools_menu() {
     echo -e "${YELLOW}Penetration Testing Tools:${NC}"
     echo -e "${CYAN}1) nmap: Network exploration and security auditing tool${NC}"
+    echo "   - A versatile and powerful tool for network discovery and security auditing, widely used for network inventory, managing service upgrade schedules, and monitoring host or service uptime."
+    echo "   - Download: https://nmap.org/download.html"
+    
     echo -e "${MAGENTA}2) nikto: Web server scanner${NC}"
+    echo "   - An open source web server scanner that performs comprehensive tests against web servers for multiple items, including over 6700 potentially dangerous files/programs and outdated versions."
+    echo "   - Download: https://cirt.net/nikto/"
+    
     echo -e "${CYAN}3) LEGION: Automated web application security scanner${NC}"
+    echo "   - A toolkit for web application testing that automates the scanning process to identify common vulnerabilities and exposures in web applications."
+    echo "   - Download: https://github.com/GoVanguard/legion"
+    
     echo -e "${MAGENTA}4) OWASP ZAP: Web application security testing tool${NC}"
+    echo "   - An open-source web application security scanner and testing tool maintained by the OWASP community, used for finding vulnerabilities in web applications."
+    echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
+
     echo -e "${CYAN}5) John the Ripper: Password cracking tool${NC}"
+    echo "   - A powerful and flexible password cracking tool that supports various encryption algorithms and is used to crack password hashes through brute-force attacks."
+    echo "   - Download: https://www.openwall.com/john/"
+
     echo -e "${MAGENTA}6) SQLmap: SQL Injection and database takeover tool${NC}"
+    echo "   - An open-source penetration testing tool that automates the process of detecting and exploiting SQL injection vulnerabilities and taking over database servers."
+    echo "   - Download: https://sqlmap.org/"
+
     echo -e "${CYAN}7) Metasploit Framework: Penetration testing framework${NC}"
+    echo "   - A comprehensive open-source framework for developing, testing, and executing exploits against target systems, widely used for penetration testing and vulnerability assessment."
+    echo "   - Download: https://metasploit.help.rapid7.com/docs/installing-the-metasploit-framework"
+
     echo -e "${YELLOW}8) Go Back${NC}"
-    display_asterisk
 }
 
 
@@ -54,337 +92,26 @@ display_penetration_testing_tools_menu() {
 display_secure_code_review_tools_menu() {
     echo -e "${YELLOW}Secure Code Review Tools:${NC}"
     echo -e "${CYAN}1) osv-scanner: Scan a directory for vulnerabilities${NC}"
+    echo "   - A tool for detecting security vulnerabilities in open source projects."
+    echo "   - Download: https://github.com/google/osv-scanner"
     echo -e "${MAGENTA}2) snyk cli: Test code locally or monitor for vulnerabilities${NC}"
+    echo "   - A CLI tool to find and fix vulnerabilities in your code, dependencies, containers, and infrastructure as code."
+    echo "   - Download: https://snyk.io/download/"
+    echo "   - Run code test locally: snyk code test <directory>"
+    echo "   - Monitor for vulnerabilities: snyk monitor <directory> --all-projects"
     echo -e "${CYAN}3) brakeman: Scan a Ruby on Rails application for security vulnerabilities${NC}"
-    echo -e "${MAGENTA}4) bandit: Security linter for Python code${NC}"
-    echo -e "${CYAN}5) SonarQube: Continuous inspection of code quality and security${NC}"
-    echo -e "${YELLOW}6) Go Back"
-    display_asterisk
+    echo "   - A static analysis tool specifically designed to find security issues in Ruby on Rails applications."
+    echo "   - Download: https://github.com/presidentbeef/brakeman"
+    echo -e "${YELLOW}4) Go Back"
 }
-
 
 # Function to display Step by Step Guide menu
 display_step_by_step_guide_menu() {
     echo -e "${YELLOW}Step by Step Guide:${NC}"
-    echo -e "${CYAN}1) Learn about Pen Testing  tools."
-    echo -e "${MAGENTA}2) Learn about Secure code review tools"
+    echo -e "${CYAN}1) How to Use Tools"
+    echo -e "${MAGENTA}2) How to Perform a Basic Security Audit"
     echo -e "${YELLOW}3) Go Back"
-    display_asterisk
 }
-# Function to display the step by step guide of the penetration testing tools.
-display_step_by_step_guide_pen_testing(){
-    
-    echo -e "${YELLOW}Penetration Testing Tools step by step guide :${NC}"
-    echo -e "${CYAN}1) nmap: Network exploration and security auditing tool${NC}"
-    echo -e "${MAGENTA}2) nikto: Web server scanner${NC}"
-    echo -e "${CYAN}3) LEGION: Automated web application security scanner${NC}"
-    echo -e "${MAGENTA}4) OWASP ZAP: Web application security testing tool${NC}"
-    echo -e "${CYAN}5) John the Ripper: Password cracking tool${NC}"
-    echo -e "${MAGENTA}6) SQLmap: SQL Injection and database takeover tool${NC}"
-    echo -e "${CYAN}7) Metasploit Framework: Penetration testing framework${NC}"
-    echo -e "${YELLOW}8) Go Back${NC}"
-    display_asterisk
-    
-}
-
-# Function to display the step by step guide of the Secure Code Review tools.
-
-display_step_by_step_guide_secure_code_review(){
-    
-    echo -e "${YELLOW}Secure Code Review Tools:${NC}"
-    echo -e "${CYAN}1) osv-scanner: Scan a directory for vulnerabilities${NC}"
-    echo -e "${MAGENTA}2) snyk cli: Test code locally or monitor for vulnerabilities${NC}"
-    echo -e "${CYAN}3) brakeman: Scan a Ruby on Rails application for security vulnerabilities${NC}"
-    echo -e "${MAGENTA}4) bandit: Security linter for Python code${NC}"
-    echo -e "${CYAN}5) SonarQube: Continuous inspection of code quality and security${NC}"
-    echo -e "${YELLOW}6) Go Back"
-    display_asterisk
-    
-}
-
-# Function for handling the guide for the OSV scanner , which helps to update the documentation, once there is any new release.
-handle_step_by_step_SCR_OSV_Scanner(){
-    local choice
-    while true; do
-        echo "   - OSV Scanner is a tool for detecting security vulnerabilities in open source projects. To learn more, click on the following link below."
-        echo "   - Download: https://github.com/google/osv-scanner"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        case $choice in
-            1) break ;;
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-        esac
-        
-    done
-    
-}
-
-# Function for handling the guide for the Snyc code scanner , which helps to update the documentation, once there is any new release.
-handle_step_by_step_SCR_Snyk(){
-    
-    local choice
-    while true; do
-        echo "   - Snyk ia a CLI tool to find and fix vulnerabilities in your code, dependencies, containers, and infrastructure as code."
-        echo "   -  To Download and learn more: https://snyk.io/download/"
-        echo "   - Run code test locally: snyk code test <directory>"
-        echo "   - Monitor for vulnerabilities: snyk monitor <directory> --all-projects"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-    
-    
-    
-}
-
-# Function for handling the guide for the brakeman tool, which helps to update the documentation, once there is any new release.
-handle_step_by_step_SCR_brakeman(){
-    
-    local choice
-    
-    while true; do
-        
-        echo "   - Barakeman is a static analysis tool specifically designed to find security issues in Ruby on Rails applications."
-        echo "   - Download: https://github.com/presidentbeef/brakeman"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-    
-    
-    
-}
-
-# Function for handling the guide for the bandit tool , which helps to update the documentation, once there is any new release.
-handle_step_by_step_SCR_bandit(){
-    
-    local choice
-    
-    while true; do
-        
-        echo "   - A tool designed to find common security issues in Python code."
-        echo "   - Download: https://bandit.readthedocs.io/en/latest/"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-    
-    
-    
-}
-
-# Function for handling the guide for the SonarQube , which helps to update the documentation, once there is any new release.
-handle_step_by_step_SCR_sonar(){
-    
-    local choice
-    
-    while true; do
-        
-        echo "   - An open-source platform for continuous inspection of code quality and security to detect bugs, vulnerabilities, and code smells."
-        echo "   - Download: https://www.sonarqube.org/downloads/"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-    
-    
-    
-}
-
-# Function for handling the guide for the nmap pentest tool, which helps to update the documentation, once there is any new release.
-handle_step_by_step_pentest_nmap(){
-    
-    local choice
-    
-    while true; do
-        
-        echo "   - A versatile and powerful tool for network discovery and security auditing, widely used for network inventory, managing service upgrade schedules, and monitoring host or service uptime."
-        echo "   - Download: https://nmap.org/download.html"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-}
-
-# Function for handling the guide for the nitko pentest tool, which helps to update the documentation, once there is any new release.
-handle_step_by_step_pentest_nitko(){
-    
-    local choice
-    
-    while true; do
-        
-        echo "   - An open source web server scanner that performs comprehensive tests against web servers for multiple items, including over 6700 potentially dangerous files/programs and outdated versions."
-        echo "   - Download: https://cirt.net/nikto/"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-}
-
-# Function for handling the guide for the legion pentest tool, which helps to update the documentation, once there is any new release.
-handle_step_by_step_pentest_legion(){
-    
-    local choice
-    
-    while true; do
-        
-        echo "   - A toolkit for web application testing that automates the scanning process to identify common vulnerabilities and exposures in web applications."
-        echo "   - Download: https://github.com/GoVanguard/legion"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-}
-
-# Function for handling the guide for the OWASP ZAP pentest tool, which helps to update the documentation, once there is any new release.
-handle_step_by_step_pentest_owasp_zap(){
-    
-    local choice
-    
-    while true; do
-        
-        echo "   - An open-source web application security scanner and testing tool maintained by the OWASP community, used for finding vulnerabilities in web applications."
-        echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-}
-
-# Function for handling the guide for the John the ripper pentest tool, which helps to update the documentation, once there is any new release.
-handle_step_by_step_pentest_John_the_ripper(){
-    
-    local choice
-    
-    while true; do
-        
-        echo "   - A powerful and flexible password cracking tool that supports various encryption algorithms and is used to crack password hashes through brute-force attacks."
-        echo "   - Download: https://www.openwall.com/john/"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-}
-
-# Function for handling the guide for the SQLmap pentest tool, which helps to update the documentation, once there is any new release.
-handle_step_by_step_pentest_SQLmap(){
-    
-    local choice
-    
-    while true; do
-        
-        echo "   - An open-source penetration testing tool that automates the process of detecting and exploiting SQL injection vulnerabilities and taking over database servers."
-        echo "   - Download: https://sqlmap.org/"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-}
-
-# Function for handling the guide for the metasploit pentest tool, which helps to update the documentation, once there is any new release.
-handle_step_by_step_pentest_metasploit(){
-    
-    local choice
-    
-    while true; do
-        
-        echo "   - A comprehensive open-source framework for developing, testing, and executing exploits against target systems, widely used for penetration testing and vulnerability assessment."
-        echo "   - Download: https://metasploit.help.rapid7.com/docs/installing-the-metasploit-framework"
-        echo -e "${YELLOW}1) Go Back${NC}"
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) break ;;
-            
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-}
-
-
 
 # Function for Penetration Testing Tools
 handle_penetration_testing_tools() {
@@ -423,97 +150,17 @@ handle_secure_code_review_tools() {
         esac
     done
 }
-# Function for handling the step by step guide
-
-handle_step_by_step_guide(){
-    
-    local choice
-    
-    while true; do
-        
-        display_step_by_step_guide_menu
-        
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) handle_step_by_step_guide_Pentest;;
-            2) handle_step_by_step_guide_SCR;;
-            3) break ;;
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-    
-}
-
-handle_step_by_step_guide_SCR(){
-    
-    local choice
-    
-    while true; do
-        
-        display_step_by_step_guide_secure_code_review
-        
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) handle_step_by_step_SCR_OSV_Scanner;;
-            2) handle_step_by_step_SCR_Snyk ;;
-            3) handle_step_by_step_SCR_brakeman;;
-            4) handle_step_by_step_SCR_bandit;;
-            5) handle_step_by_step_SCR_sonar ;;
-            6) break;;
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-    
-    
-    
-}
-
-handle_step_by_step_guide_Pentest(){
-    
-    local choice
-    
-    while true; do
-        
-        display_step_by_step_guide_pen_testing
-        
-        read -p "Choose an option: " choice
-        
-        case $choice in
-            
-            1) handle_step_by_step_pentest_nmap;;
-            2) handle_step_by_step_pentest_nitko;;
-            3) handle_step_by_step_pentest_legion;;
-            4) handle_step_by_step_pentest_owasp_zap;;
-            5) handle_step_by_step_pentest_John_the_ripper;;
-            6) handle_step_by_step_pentest_SQLmap;;
-            7) handle_step_by_step_pentest_metasploit;;
-            8) break ;;
-            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
-            
-        esac
-        
-    done
-}
 
 # Function to run nmap
 run_nmap(){
     output_file="${output}_nmap"
-    read -p "Enter URL or IP address to scan: " url
+    read -p "$(echo -e ${BCyan}"Enter URL or IP address to scan:${NC} ")" url
     if [[ "$output_to_file" == "y" ]]; then
-        nmap_output=$(nmap -oN "$output_file" "$url")
+        nmap -oN "$output_file" "$url" 
     else
         nmap_output=$(nmap "$url")
         nmap "$url"
     fi
-    generate_ai_insights "$nmap_output"
     echo -e "${GREEN} Nmap Operation completed.${NC}"
 }
 
@@ -571,65 +218,51 @@ run_sonarqube() {
 
 }
 
-# Function to run Nikto
+
+
+run_sonarqube() {
+    echo -e "${BCyan}Starting SonarQube...${NC}"
+    
+    # Check if SonarQube Docker container is already running or exists
+    if sudo docker ps -a --format '{{.Names}}' | grep -w "sonarqube" > /dev/null; then
+        echo -e "${YELLOW}A container named 'sonarqube' already exists. Removing the existing container...${NC}"
+        sudo docker rm -f sonarqube
+    fi
+
+    echo -e "${BCyan}Running SonarQube container...${NC}"
+    sudo docker run -d --name sonarqube -p 9001:9000 sonarqube
+    
+    echo -e "${BGreen}SonarQube is running at http://localhost:9001${NC}"
+    echo -e "${BCyan}Default credentials:${NC}"
+    echo -e "${BCyan}login: admin${NC}"
+    echo -e "${BCyan}password: admin${NC}"
+}
+
 run_nikto() {
     output_file="${output}_nikto"
-    read -p "Enter URL and port to scan (Example: http://localhost:4200): " url
+    read -p "$(echo -e ${BCyan}"Enter URL and port to scan (Example: http://localhost:4200):${NC} ")" url
     if [[ "$output_to_file" == "y" ]]; then
         read -p "Enter the output format (txt, html, xml): " format
-        nikto_output=$(nikto -h "$url" -o "$output_file" -Format "$format")
-    echo "$nikto_output" > "$output"
+        nikto -h "$url" -o "$output_file" -Format "$format"
     else
         nikto_output=$(nikto -h "$url")
         nikto -h "$url"
     fi
-    generate_ai_insights "$nikto_output"
     echo -e "${GREEN} Nikto Operation completed.${NC}"
 }
 
 
-
 # Function to run LEGION
-run_legion() {
-    output_file="${output}_legion"
-
-    if [[ "$output_to_file" == "y" ]]; then
-        # Show the output on the screen and capture it in a file using 'tee'
-        sudo legion | tee "$output_file.txt" > "$output_file_log.txt"
-        legion_output=$(cat "$output_file_log.txt")
-    else
-        # Just show the output on the screen and capture it in a variable
-        legion_output=$(sudo legion 2>&1)
-        echo "$legion_output"
-    fi
-
-    # Call the function to generate AI insights based on Legion output
-    generate_ai_insights "$legion_output" "$output_to_file" "$output_file.txt"
-    echo -e "${GREEN} Legion operation completed.${NC}"
-
-
+run_legion(){
+    sudo legion
+    echo -e "${GREEN} Legion Operation completed.${NC}"
 }
 
-
 # Function to run OWASP ZAP
-run_owasp_zap() {
-    output_file="${output}_zap"
-    read -p "Enter URL and port to scan (Example: http://localhost:4200): " url
-
-    if [[ "$output_to_file" == "y" ]]; then
-        # Show the output on the screen and capture it in a file using 'tee'
-        zap -quickurl $url | tee "$output_file.txt" > "$output_file_log.txt"
-        zap_output=$(cat "$output_file_log.txt")
-    else
-        # Just show the output on the screen and capture it in a variable
-        zap_output=$(zap -quickurl $url 2>&1)
-        echo "$zap_output"
-    fi
-    # Call the function to generate AI insights based on OWASP ZAP output
-    generate_ai_insights "$zap_output" "$output_to_file" "$output_file.txt"
+run_owasp_zap(){
+    read -p "Enter URL and port to scan (Example: http://localhost:4200): " url          
+    zap -quickurl $url
     echo -e "${GREEN} OWASP ZAP Operation completed.${NC}"
-
-
 }
 
 
@@ -638,22 +271,14 @@ run_owasp_zap() {
 run_john() {
     output_file="${output}_john"
     read -p "Enter the path to the password file to crack: " password_file
-
     if [[ "$output_to_file" == "y" ]]; then
-        # Capture the output of john to a file
-        john --session="$output_file" "$password_file" > "$output_file.txt" 2>&1
-        john_output=$(cat "$output_file.txt")
+        john --session="$output_file" "$password_file" > "$output_file" 2>&1
     else
         # Capture the output of john to a variable
         john_output=$(john "$password_file" 2>&1)
         echo "$john_output"
     fi
-
-    # Call the function to generate AI insights based on John the Ripper output
-    generate_ai_insights "$john_output" "$output_to_file" "$output_file.txt"
     echo -e "${GREEN} John the Ripper operation completed.${NC}"
-
-
 }
 
 
@@ -661,19 +286,13 @@ run_john() {
 run_sqlmap() {
     output_file="${output}_sqlmap"
     read -p "Enter URL to scan (e.g., http://example.com/vuln.php?id=1): " url
-
     if [[ "$output_to_file" == "y" ]]; then
         sqlmap -u "$url" --output-dir="$output_file" > "$output_file/sqlmap_output.txt" 2>&1
-        sqlmap_output=$(cat "$output_file/sqlmap_output.txt") # Capture the output
     else
         sqlmap_output=$(sqlmap -u "$url" 2>&1) # Capture output to variable
         echo "$sqlmap_output"
     fi
-
     echo -e "${GREEN} SQLmap operation completed.${NC}"
-
-    # Call the function to generate AI insights based on sqlmap output
-    generate_ai_insights "$sqlmap_output" "$output_to_file" "$output_file/sqlmap_output.txt"
 }
 
 # Function to run Metasploit
@@ -681,79 +300,67 @@ run_metasploit() {
     output_file="${output}_metasploit"
     if [[ "$output_to_file" == "y" ]]; then
         sudo msfconsole | tee "$output_file.txt"
+        echo -e "${BGreen}Results saved to $output_file.txt.${NC}"
     else
         sudo msfconsole
     fi
-    echo -e "${GREEN} Metasploit operation completed.${NC}"
+    echo -e "${BGreen}Metasploit operation completed.${NC}"
 }
 
 # Function to run osv-scanner
 run_osv_scanner(){
     output_file="${output}_osv_scanner"
-    read -p "Enter directory to scan: " directory
+    read -p "$(echo -e ${BCyan} "Enter directory to scan:${NC} ")" directory
     source ~/.bashrc
     if [[ "$output_to_file" == "y" ]]; then
-        osv_output=$(osv-scanner --format table --output "$output_file" -r "$directory")
-    echo "$osv_output" > "$output"
-    else
-        osv_output=$(osv-scanner --recursive "$directory")
-        osv-scanner --recursive "$directory"
-    fi
-    generate_ai_insights "$osv_output"
+        osv-scanner --format table --output "$output_file" -r "$directory"  
+	else
+    	osv-scanner --recursive "$directory"
+	fi
     echo -e "${GREEN} OSV-Scanner Operation completed.${NC}"
 }
 
 # Function to run snyk cli
 run_snyk(){
     output_file="${output}_snyk"
-    read -p "Select Snyk option:
+    read -p "$(echo -e ${BCyan} "Select Snyk option:
     1) Run code test locally
     2) Monitor for vulnerabilities and see results in Snyk UI
-    Enter your choice (1/2): " snyk_option
+    Enter your choice (1/2):${NC} ")" snyk_option
     case $snyk_option in
         1)   if [[ "$output_to_file" == "y" ]]; then
-                read -p "Enter directory to scan (current directory ./): " directory
-                snyk_output=$(snyk code test $directory)
-            echo "$snyk_output" > $output_file
-                echo -e "${GREEN} SNYK Operation completed.${NC}"
+            read -p "Enter directory to scan (current directory ./): " directory
+            snyk code test $directory > $output_file
             else
-                read -p "Enter directory to scan (current directory ./): " directory
-                snyk code test $directory
-                snyk_output=$(snyk code test $directory)
-                echo -e "${GREEN} SNYK Operation completed.${NC}"
+                    read -p "Enter directory to scan (current directory ./): " directory
+                            snyk code test $directory
             fi
-        ;;
+         ;;
         2) if [[ "$output_to_file" == "y" ]]; then
-                read -p "Enter directory to scan (current directory ./): " directory
-                snyk_output=$(snyk monitor $directory --all-projects > $output_file)
-                echo "$snyk_output" > "$output"
-                echo -e "${GREEN} SNYK Operation completed.${NC}"
+            read -p "Enter directory to scan (current directory ./): " directory
+            snyk monitor $directory --all-projects > $output_file
             else
-                snyk_output=$(snyk monitor $directory --all-projects)
-                echo -e "${GREEN} SNYK Operation completed.${NC}"
+            snyk monitor $directory --all-projects
             fi
             echo -e "${GREEN} SNYK Operation completed.${NC}"
-        ;;
+            ;;
         *)
             echo -e "${RED}Invalid choice!${NC}"
-        ;;
-    esac
-    generate_ai_insights "$snyk_output"
-    echo -e "${GREEN} SNYK Operation completed.${NC}"
+            ;;
+        esac
 }
 
 # Function to run Brakeman
 run_brakeman(){
     output_file="${output}_brakeman"
-    read -p "Enter directory to scan (current directory ./): " directory
+    read -p "$(echo -e ${BCyan} "Enter directory to scan (current directory ./):${NC} ")" directory
     if [[ "$output_to_file" == "y" ]]; then
-        brakeman_output=$(sudo brakeman "$directory" --force  -o "$output_file")
+        sudo brakeman "$directory" --force  -o "$output_file"
     else
         brakeman_output=$(sudo brakeman "$directory" --force)
         sudo brakeman "$directory" --force
     fi
-    generate_ai_insights "$brakeman_output"
-    echo -e "${GREEN} Brakeman Operation completed.${NC}"
+        echo -e "${GREEN} Brakeman Operation completed.${NC}"
 }
 
 # Function to log messages with a timestamp to the log file
@@ -1207,20 +814,7 @@ check_updates() {
         echo -e "${YELLOW}Skipping updates check.${NC}"
     fi
 }
-
-install_generate_ai_insights_dependencies() {
-    # Check if jq is installed
-    if ! command -v jq &> /dev/null; then
-        echo -e "${MAGENTA}Intalling generate AI insights dependencies...${NC}"
-        
-        # Update package list and install jq
-        sudo apt-get update
-        sudo apt-get install -y jq
-    else
-        echo -e "${GREEN}Generate AI insights dependencies are already installed.${NC}"
-    fi
-}
-
+    
 # Function to save vulnerabilities found by various tools to a file
 save_vulnerabilities() {
     # Set the tool name to the first argument
@@ -1348,11 +942,11 @@ generate_ai_insights() {
 
 # Main function to check and install tools
 main() {
-    
-    # Initialize log file by clearing its contents
+ 
+   # Initialize log file by clearing its contents
     echo "" > "$LOG_FILE"
     
-    # Check if npm is installed; if not, install it
+# Check if npm is installed; if not, install it
     if ! command -v npm &> /dev/null; then
         install_npm
     fi
@@ -1389,25 +983,25 @@ main() {
     
     # Check for updates for the installed tools
     check_updates
-    
+
     # Ask if the user wants to output to a file
-    read -p "Do you want to output results to a file? (y/n): " output_to_file
+    read -p "$(echo -e ${BYellow}"Do you want to output results to a file? (y/n): "${NC})" output_to_file
     if [[ "$output_to_file" == "y" ]]; then
-        read -p "Enter the output file path: " output
+        read -p "$(echo -e ${BYellow}"Enter the output file path: "${NC})" output
     fi
     
     while true; do
         display_main_menu
-        read -p "Choose an option: " main_choice
+        read -p "$(echo -e ${BYellow}"Choose an option: "${NC})" main_choice
         case $main_choice in
             1) handle_penetration_testing_tools ;;
             2) handle_secure_code_review_tools ;;
-            3) handle_step_by_step_guide ;;
+            3) display_step_by_step_guide_menu ;;
             4) echo -e "${YELLOW}Exiting...${NC}"
                 log_message "Script ended"
-            exit 0 ;;
+               exit 0 ;;
             *) echo -e "${RED}Invalid choice, please try again.${NC}"
-            log_message "Invalid user input" ;;
+                log_message "Invalid user input" ;;
         esac
     done
 }
