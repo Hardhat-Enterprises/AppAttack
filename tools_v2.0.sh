@@ -7,6 +7,7 @@ YELLOW='\033[1;33m'     # Yellow color
 CYAN='\033[0;36m'       # Cyan color
 MAGENTA='\033[0;35m'    # Magenta color
 NC='\033[0m'            # No Color  (reset to default)
+BLUE='\033[1;94m'
 
 # Define the log file path where the script logs messages
 LOG_FILE="$HOME/security_tools.log"
@@ -517,20 +518,27 @@ run_nmap(){
 }
 
 # Function to run Bandit
-run_bandit(){
-    output_file="${output}_bandit"
+run_bandit() {
+    output_file="${output}_bandit.txt"
     read -p "Enter the directory to scan: " directory
+
+    # Capture the output of the Bandit command
     if [[ "$output_to_file" == "y" ]]; then
-        bandit -r "$directory" -o "$output_file" -f txt
+        bandit_output=$(bandit -r "$directory" -f txt)
+        echo "$bandit_output" > "$output_file"
     else
-        bandit -r "$directory"
+        bandit_output=$(bandit -r "$directory" -f txt)
+        echo -e "${NC}"
+        echo "$bandit_output"
     fi
+    generate_ai_insights "$bandit_output"
     echo -e "${GREEN} Bandit operation completed.${NC}"
 }
 
-#Function to run SonarQube
-run_sonarqube()
-{
+# Function to run SonarQube
+run_sonarqube() {
+    output_file="${output}_sonarqube"
+
     # Check if SonarQube Docker container is already running or exists
     if sudo docker ps -a --format '{{.Names}}' | grep -w "sonarqube" > /dev/null; then
         echo -e "${YELLOW}A container named 'sonarqube' already exists. Removing the existing container...${NC}"
@@ -539,11 +547,28 @@ run_sonarqube()
 
     echo -e "${CYAN}Running SonarQube container...${NC}"
     sudo docker run -d --name sonarqube -p 9001:9000 sonarqube
-    
+
     echo -e "${GREEN}SonarQube is running at http://localhost:9001${NC}"
     echo "Default credentials: "
     echo "login: admin"
     echo "password: admin"
+
+    # Capture SonarQube logs
+    if [[ "$output_to_file" == "y" ]]; then
+        # Show the logs on the screen and capture them in a file using 'tee'
+        sudo docker logs -f sonarqube | tee "$output_file.txt" > "$output_file_log.txt"
+        sonarqube_output=$(cat "$output_file_log.txt")
+    else
+        # Capture the logs in a variable and display them
+        sonarqube_output=$(sudo docker logs -f sonarqube 2>&1)
+        echo "$sonarqube_output"
+    fi
+
+    # Call the function to generate AI insights based on SonarQube logs
+    generate_ai_insights "$sonarqube_output" "$output_to_file" "$output_file.txt"
+    echo -e "${GREEN}SonarQube operation completed.${NC}"
+
+
 }
 
 # Function to run Nikto
@@ -563,41 +588,92 @@ run_nikto() {
 }
 
 
+
 # Function to run LEGION
-run_legion(){
-    sudo legion
-    echo -e "${GREEN} Legion Operation completed.${NC}"
+run_legion() {
+    output_file="${output}_legion"
+
+    if [[ "$output_to_file" == "y" ]]; then
+        # Show the output on the screen and capture it in a file using 'tee'
+        sudo legion | tee "$output_file.txt" > "$output_file_log.txt"
+        legion_output=$(cat "$output_file_log.txt")
+    else
+        # Just show the output on the screen and capture it in a variable
+        legion_output=$(sudo legion 2>&1)
+        echo "$legion_output"
+    fi
+
+    # Call the function to generate AI insights based on Legion output
+    generate_ai_insights "$legion_output" "$output_to_file" "$output_file.txt"
+    echo -e "${GREEN} Legion operation completed.${NC}"
+
+
 }
 
+
 # Function to run OWASP ZAP
-run_owasp_zap(){
+run_owasp_zap() {
+    output_file="${output}_zap"
     read -p "Enter URL and port to scan (Example: http://localhost:4200): " url
-    zap -quickurl $url
+
+    if [[ "$output_to_file" == "y" ]]; then
+        # Show the output on the screen and capture it in a file using 'tee'
+        zap -quickurl $url | tee "$output_file.txt" > "$output_file_log.txt"
+        zap_output=$(cat "$output_file_log.txt")
+    else
+        # Just show the output on the screen and capture it in a variable
+        zap_output=$(zap -quickurl $url 2>&1)
+        echo "$zap_output"
+    fi
+    # Call the function to generate AI insights based on OWASP ZAP output
+    generate_ai_insights "$zap_output" "$output_to_file" "$output_file.txt"
     echo -e "${GREEN} OWASP ZAP Operation completed.${NC}"
+
+
 }
+
+
 
 # Function to run John the Ripper
 run_john() {
     output_file="${output}_john"
     read -p "Enter the path to the password file to crack: " password_file
+
     if [[ "$output_to_file" == "y" ]]; then
-        john --session="$output_file" "$password_file" > "$output_file" 2>&1
+        # Capture the output of john to a file
+        john --session="$output_file" "$password_file" > "$output_file.txt" 2>&1
+        john_output=$(cat "$output_file.txt")
     else
-        john "$password_file"
+        # Capture the output of john to a variable
+        john_output=$(john "$password_file" 2>&1)
+        echo "$john_output"
     fi
+
+    # Call the function to generate AI insights based on John the Ripper output
+    generate_ai_insights "$john_output" "$output_to_file" "$output_file.txt"
     echo -e "${GREEN} John the Ripper operation completed.${NC}"
+
+
 }
+
 
 # Function to run sqlmap
 run_sqlmap() {
     output_file="${output}_sqlmap"
     read -p "Enter URL to scan (e.g., http://example.com/vuln.php?id=1): " url
+
     if [[ "$output_to_file" == "y" ]]; then
         sqlmap -u "$url" --output-dir="$output_file" > "$output_file/sqlmap_output.txt" 2>&1
+        sqlmap_output=$(cat "$output_file/sqlmap_output.txt") # Capture the output
     else
-        sqlmap -u "$url"
+        sqlmap_output=$(sqlmap -u "$url" 2>&1) # Capture output to variable
+        echo "$sqlmap_output"
     fi
+
     echo -e "${GREEN} SQLmap operation completed.${NC}"
+
+    # Call the function to generate AI insights based on sqlmap output
+    generate_ai_insights "$sqlmap_output" "$output_to_file" "$output_file/sqlmap_output.txt"
 }
 
 # Function to run Metasploit
@@ -1210,9 +1286,9 @@ save_vulnerabilities() {
 
 # Function to get and print AI-generated insights based on tool outputs
 generate_ai_insights() {
-    local output="$1" #tool output
-    local output_to_file="$2" #output to file (either y or n)
-    local output_file="$3" #output file directory
+    local output="$1" # Tool output
+    local output_to_file="$2" # Output to file (either y or n)
+    local output_file="$3" # Output file directory
     
     read -p "Do you want to get AI-generated insights on the scan? (y/n): " ai_insights
 
@@ -1220,44 +1296,55 @@ generate_ai_insights() {
         # Use existing Google Gemini API key or replace with your own one
         API_KEY="AIzaSyBaGoV4EC9vhhypqeB5lG1OEkT-SsT_1tw"
 
+        # Escape special characters in the output to safely include it in JSON
+        escaped_output=$(echo "$output" | sed 's/"/\\"/g' | sed "s/'/\\'/g")
+
         # Format the data for the Gemini API
-        PROMPT="Analyze this output and provide insights: $output"
+        PROMPT="Analyze this output and provide insights: $escaped_output"
         
-	# Call Gemini API using curl
-	RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$API_KEY" \
-	-H "Content-Type: application/json" \
-	-d '{
-	"contents": [
-	  {
-	    "parts": [
-	      {
-		"text": "'"$PROMPT"'"
-	      }
-	    ]
-	  }
-	]
-	}')
-	
-	#Uncomment below for debugging
-	#echo "Response:"
-	#echo "$RESPONSE"
-	
+        # Call Gemini API using curl
+        RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$API_KEY" \
+        -H "Content-Type: application/json" \
+        -d '{
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "'"$PROMPT"'"
+                  }
+                ]
+              }
+            ]
+        }')
+        
+        # Uncomment below for debugging
+        echo "Response:"
+        echo "$RESPONSE"
+        
         # Extract the insights from the API response
         INSIGHTS=$(echo $RESPONSE | jq -r '.candidates[0].content.parts[0].text')
         
-        # Append the AI-generated insights to the Nmap output file if saved to file
-	if [[ "$output_to_file" == "y" ]]; then
-	    echo -e "\nAI-Generated Insights:\n$INSIGHTS" >> "$output_file"
-	else
-	    # Display the AI-generated insights
+        # Append the AI-generated insights to the output file if saved to file
+        if [[ "$output_to_file" == "y" ]]; then
+            echo -e "\nAI-Generated Insights:\n$INSIGHTS" >> "$output_file"
+        else
+            # Display the AI-generated insights
+            display_asterisk
+            echo -e "${YELLOW}"
             echo -e "+-----------------------------+"
-	    echo -e "| Insights                    |"
-	    echo -e "+-----------------------------+"
-	    echo -e "$INSIGHTS"
-	    echo -e "+-----------------------------+"
+            echo -e "|          Insights           |"
+            echo -e "+-----------------------------+"
+            echo -e "${BLUE}"
+            echo -e "$INSIGHTS"
+            echo -e "${NC}"
+            echo -e "${YELOW}"
+            echo -e "+-----------------------------+"
+
+            display_asterisk
         fi
     fi
-}    
+}
+  
 
 # Main function to check and install tools
 main() {
