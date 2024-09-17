@@ -42,6 +42,11 @@ MAGENTA='\033[0;35m'    # Magenta color
 NC='\033[0m'            # No Color  (reset to default)
 BLUE='\033[1;94m'
 
+
+
+
+# Define the log file path where the script logs messages
+LOG_FILE="$HOME/security_tools.log"
 # Function to display the main menu
 display_main_menu() {
     echo -e "\n${BYellow}╔════════════════════════════════╗${NC}"
@@ -55,16 +60,15 @@ display_main_menu() {
 }
 
 # Function to display asterisks in order to make the display uncluttered.
-display_asterisk(){
-
-    echo -e "${YELLOW}"
+#display_asterisk(){
+   # echo -e "${YELLOW}"
     # Using a loop
-    for i in {1..100}; do
-        echo -n "*"
-    done
-    echo  # Move to the next line after printing all asterisks
+   # for i in {1..100}; do
+     #   echo -n "*"
+ #   done
+ #   echo  # Move to the next line after printing all asterisks
     
-}
+#}
 
 # Function to display Penetration Testing Tools menu
 display_penetration_testing_tools_menu() {
@@ -121,7 +125,7 @@ display_step_by_step_guide_pen_testing(){
     echo -e "${MAGENTA}6) SQLmap: SQL Injection and database takeover tool${NC}"
     echo -e "${CYAN}7) Metasploit Framework: Penetration testing framework${NC}"
     echo -e "${YELLOW}8) Go Back${NC}"
-    display_asterisk
+   # display_asterisk
     
 }
 
@@ -136,7 +140,7 @@ display_step_by_step_guide_secure_code_review(){
     echo -e "${MAGENTA}4) bandit: Security linter for Python code${NC}"
     echo -e "${CYAN}5) SonarQube: Continuous inspection of code quality and security${NC}"
     echo -e "${YELLOW}6) Go Back"
-    display_asterisk
+  #  display_asterisk
     
 }
 
