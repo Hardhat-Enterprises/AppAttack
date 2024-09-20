@@ -1360,8 +1360,8 @@ generate_ai_insights() {
         }')
         
         # Uncomment below for debugging
-        echo "Response:"
-        echo "$RESPONSE"
+        #echo "Response:"
+        #echo "$RESPONSE"
         
         # Extract the insights from the API response
         INSIGHTS=$(echo $RESPONSE | jq -r '.candidates[0].content.parts[0].text')
