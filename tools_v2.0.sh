@@ -82,7 +82,8 @@ display_penetration_testing_tools_menu() {
     echo -e "${BCyan}5)${NC} ${White}John the Ripper: Password cracking tool${NC}"
     echo -e "${BCyan}6)${NC} ${White}SQLmap: SQL Injection and database takeover tool${NC}"
     echo -e "${BCyan}7)${NC} ${White}Metasploit Framework: Penetration testing framework${NC}"
-    echo -e "${BCyan}8)${NC} ${White}Go Back${NC}"
+    echo -e "${BCyan}8)${NC} ${White}Wapiti: Web Application Vulnerability Scanner${NC}"
+    echo -e "${BCyan}9)${NC} ${White}Go Back${NC}"
     echo -e "${BYellow}╚════════════════════════════════════════════╝${NC}"
 }
 
@@ -124,7 +125,8 @@ display_step_by_step_guide_pen_testing(){
     echo -e "${CYAN}5) John the Ripper: Password cracking tool${NC}"
     echo -e "${MAGENTA}6) SQLmap: SQL Injection and database takeover tool${NC}"
     echo -e "${CYAN}7) Metasploit Framework: Penetration testing framework${NC}"
-    echo -e "${YELLOW}8) Go Back${NC}"
+    echo -e "${MAGENTA}8) Wapiti: Web Application Vulnerability Scanner${NC}"
+    echo -e "${YELLOW}9) Go Back${NC}"
    # display_asterisk
     
 }
@@ -426,7 +428,25 @@ handle_step_by_step_pentest_metasploit(){
     done
 }
 
-
+# Function for handling the guide for the Wapiti pentest tool, which helps to update the documentation, once there is any new release.
+handle_step_by_step_pentest_wapiti() {
+    echo -e "${YELLOW}Wapiti Step-by-Step Guide:${NC}"
+    echo -e "${CYAN}1) Install Wapiti:${NC}"
+    echo "   To install Wapiti, run the following command:"
+    echo "   sudo apt-get install wapiti"
+    
+    echo -e "${CYAN}2) Run Wapiti:${NC}"
+    echo "   To run Wapiti on a target URL, use the following command:"
+    echo "   wapiti -u http://example.com -o output_directory"
+    
+    echo -e "${CYAN}3) View Results:${NC}"
+    echo "   After Wapiti completes its scan, the results will be available in the output directory specified."
+    
+    echo -e "${CYAN}4) Update Documentation:${NC}"
+    echo "   Ensure that you regularly check for updates to Wapiti and update the documentation accordingly."
+    
+    echo -e "${YELLOW}End of Wapiti Step-by-Step Guide${NC}"
+}
 
 # Function for Penetration Testing Tools
 handle_penetration_testing_tools() {
@@ -442,7 +462,8 @@ handle_penetration_testing_tools() {
             5) run_john ;;
             6) run_sqlmap ;;
             7) run_metasploit ;;
-            8) break ;;
+	    8) run_wapiti ;;
+            9) break ;;
             *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
         esac
     done
@@ -537,7 +558,8 @@ handle_step_by_step_guide_Pentest(){
             5) handle_step_by_step_pentest_John_the_ripper;;
             6) handle_step_by_step_pentest_SQLmap;;
             7) handle_step_by_step_pentest_metasploit;;
-            8) break ;;
+	    8) handle_step_by_step_pentest_wapiti ;;  
+            9) break ;;
             *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
             
         esac
@@ -827,6 +849,18 @@ log_message() {
     echo "$(date +"%Y-%m-%d %H:%M:%S") - $message" >> "$LOG_FILE"
 }
 
+# Function to run Wapiti
+run_wapiti() {
+    read -p "Enter the URL to scan: " url
+    read -p "Enter the output file path: " output_file
+    
+    # Run Wapiti scan
+    wapiti -u "$url" -o "$output_file"
+    
+    echo -e "${GREEN}Wapiti scan completed. Results saved to $output_file.${NC}"
+}
+
+
 # Function to check for updates for the installed security tools
 check_updates() {
     log_message "Checking for updates..."
@@ -845,6 +879,7 @@ check_updates() {
     update_john
     update_sqlmap
     update_metasploit
+    update_wapiti
 }
 
 
@@ -988,6 +1023,27 @@ update_metasploit() {
             log_message "Metasploit Framework updated to version $latest_version"
         else
             log_message "Metasploit Framework is up-to-date (version $current_version)"
+        fi
+    fi
+}
+
+# Function to update Wapiti
+update_wapiti() {
+    echo -e "${YELLOW}Updating Wapiti...${NC}"
+    
+    # Check if pip3 is available and Wapiti was installed via pip
+    if command -v pip3 &> /dev/null; then
+        echo -e "${CYAN}Updating Wapiti using pip3...${NC}"
+        pip3 install --upgrade wapiti3
+    else
+        # If pip3 is not available, check if Wapiti was installed from source
+        if [ -d "$HOME/wapiti" ]; then
+            echo -e "${CYAN}Updating Wapiti from source...${NC}"
+            cd "$HOME/wapiti" || { echo -e "${RED}Failed to change directory to Wapiti source.${NC}"; return 1; }
+            git pull origin master
+            python3 setup.py install
+        else
+            echo -e "${RED}Wapiti installation not found or not supported update method.${NC}"
         fi
     fi
 }
@@ -1274,6 +1330,35 @@ install_metasploit() {
     fi
 }
 
+# Function to install Wapiti (a vulnerability scanner) if not already installed
+install_wapiti() {
+    #echo -e "${YELLOW}Checking for Wapiti installation...${NC}"
+
+    # Check if Wapiti is already installed
+    if command -v wapiti3 &> /dev/null; then
+        echo -e "${GREEN}Wapiti is already installed.${NC}"
+        return
+    fi
+
+    # Try to install Wapiti using pip3
+    if command -v pip3 &> /dev/null; then
+        #echo -e "${CYAN}Installing Wapiti using pip3...${NC}"
+        pip3 install wapiti3 --no-warn-script-location --disable-pip-version-check > /dev/null 2>&1 || true
+    else
+        echo -e "${RED}pip3 not found. Trying to install Wapiti from source...${NC}"
+
+        # Clone the Wapiti repository and install from source
+        if [ ! -d "$HOME/wapiti" ]; then
+            #echo -e "${CYAN}Cloning Wapiti repository...${NC}"
+            git clone https://github.com/andresriancho/wapiti.git "$HOME/wapiti" > /dev/null 2>&1
+        fi
+
+        #echo -e "${CYAN}Installing Wapiti from source...${NC}"
+        cd "$HOME/wapiti" || return
+        python3 setup.py install > /dev/null 2>&1 || true
+    fi
+}
+
 # Function to check for updates
 check_updates() {
     # Prompt user to check for updates
@@ -1290,6 +1375,7 @@ check_updates() {
         update_john
         update_sqlmap
         update_metasploit
+	update_wapiti
         # Display success message
         echo -e "${GREEN}Updates checked successfully.${NC}"
     else
@@ -1354,6 +1440,10 @@ save_vulnerabilities() {
         "metasploit")
             # Run Metasploit scan and save output to the file
             msfconsole -x "use auxiliary/scanner/portscan/tcp; set RHOSTS $url; run; exit" > "$output_file"
+        ;;
+	"wapiti")
+            # Run Wapiti scan and save output to the file
+            wapiti -u "$url" -o "$output_file"
         ;;
         *)
             echo -e "${RED}Unsupported tool: $tool${NC}"
@@ -1476,6 +1566,8 @@ main() {
     install_metasploit
     # install sonarqube
     install_sonarqube
+    # Check and install wapiti
+    install_wapiti
     
     # Check for updates for the installed tools
     check_updates
