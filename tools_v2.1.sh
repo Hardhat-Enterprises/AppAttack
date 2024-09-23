@@ -13,45 +13,40 @@ LOG_FILE="$HOME/security_tools.log"
 
 # Function to display the main menu
 display_main_menu() {
+    display_asterisk
     echo -e "${YELLOW}Main Menu:${NC}"
     echo -e "${CYAN}1) Penetration Testing Tools"
     echo -e "${MAGENTA}2) Secure Code Review Tools"
     echo -e "${CYAN}3) Step by Step Guide"
     echo -e "${YELLOW}4) Exit"
+    display_asterisk
+}
+
+# Function to display asterisks in order to make the display uncluttered.
+display_asterisk(){
+
+    echo -e "${YELLOW}"
+    # Using a loop
+    for i in {1..100}; do
+        echo -n "*"
+    done
+    echo  # Move to the next line after printing all asterisks
+    
 }
 
 # Function to display Penetration Testing Tools menu
 display_penetration_testing_tools_menu() {
     echo -e "${YELLOW}Penetration Testing Tools:${NC}"
     echo -e "${CYAN}1) nmap: Network exploration and security auditing tool${NC}"
-    echo "   - A versatile and powerful tool for network discovery and security auditing, widely used for network inventory, managing service upgrade schedules, and monitoring host or service uptime."
-    echo "   - Download: https://nmap.org/download.html"
-    
     echo -e "${MAGENTA}2) nikto: Web server scanner${NC}"
-    echo "   - An open source web server scanner that performs comprehensive tests against web servers for multiple items, including over 6700 potentially dangerous files/programs and outdated versions."
-    echo "   - Download: https://cirt.net/nikto/"
-    
     echo -e "${CYAN}3) LEGION: Automated web application security scanner${NC}"
-    echo "   - A toolkit for web application testing that automates the scanning process to identify common vulnerabilities and exposures in web applications."
-    echo "   - Download: https://github.com/GoVanguard/legion"
-    
     echo -e "${MAGENTA}4) OWASP ZAP: Web application security testing tool${NC}"
-    echo "   - An open-source web application security scanner and testing tool maintained by the OWASP community, used for finding vulnerabilities in web applications."
-    echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
-
     echo -e "${CYAN}5) John the Ripper: Password cracking tool${NC}"
-    echo "   - A powerful and flexible password cracking tool that supports various encryption algorithms and is used to crack password hashes through brute-force attacks."
-    echo "   - Download: https://www.openwall.com/john/"
-
     echo -e "${MAGENTA}6) SQLmap: SQL Injection and database takeover tool${NC}"
-    echo "   - An open-source penetration testing tool that automates the process of detecting and exploiting SQL injection vulnerabilities and taking over database servers."
-    echo "   - Download: https://sqlmap.org/"
-
     echo -e "${CYAN}7) Metasploit Framework: Penetration testing framework${NC}"
-    echo "   - A comprehensive open-source framework for developing, testing, and executing exploits against target systems, widely used for penetration testing and vulnerability assessment."
-    echo "   - Download: https://metasploit.help.rapid7.com/docs/installing-the-metasploit-framework"
-
-    echo -e "${YELLOW}8) Go Back${NC}"
+    echo -e "${MAGENTA}8) Wapiti: Web Application Vulnerability Scanner${NC}"
+    echo -e "${YELLOW}9) Go Back${NC}"
+    display_asterisk
 }
 
 
@@ -59,26 +54,358 @@ display_penetration_testing_tools_menu() {
 display_secure_code_review_tools_menu() {
     echo -e "${YELLOW}Secure Code Review Tools:${NC}"
     echo -e "${CYAN}1) osv-scanner: Scan a directory for vulnerabilities${NC}"
-    echo "   - A tool for detecting security vulnerabilities in open source projects."
-    echo "   - Download: https://github.com/google/osv-scanner"
     echo -e "${MAGENTA}2) snyk cli: Test code locally or monitor for vulnerabilities${NC}"
-    echo "   - A CLI tool to find and fix vulnerabilities in your code, dependencies, containers, and infrastructure as code."
-    echo "   - Download: https://snyk.io/download/"
-    echo "   - Run code test locally: snyk code test <directory>"
-    echo "   - Monitor for vulnerabilities: snyk monitor <directory> --all-projects"
     echo -e "${CYAN}3) brakeman: Scan a Ruby on Rails application for security vulnerabilities${NC}"
-    echo "   - A static analysis tool specifically designed to find security issues in Ruby on Rails applications."
-    echo "   - Download: https://github.com/presidentbeef/brakeman"
-    echo -e "${YELLOW}4) Go Back"
+    echo -e "${MAGENTA}4) bandit: Security linter for Python code${NC}"
+    echo -e "${CYAN}5) SonarQube: Continuous inspection of code quality and security${NC}"
+    echo -e "${YELLOW}6) Go Back"
+    display_asterisk
 }
+
 
 # Function to display Step by Step Guide menu
 display_step_by_step_guide_menu() {
     echo -e "${YELLOW}Step by Step Guide:${NC}"
-    echo -e "${CYAN}1) How to Install Tools"
-    echo -e "${MAGENTA}2) How to Perform a Basic Security Audit"
+    echo -e "${CYAN}1) Learn about Pen Testing  tools."
+    echo -e "${MAGENTA}2) Learn about Secure code review tools"
     echo -e "${YELLOW}3) Go Back"
+    display_asterisk
 }
+# Function to display the step by step guide of the penetration testing tools.
+display_step_by_step_guide_pen_testing(){
+    
+    echo -e "${YELLOW}Penetration Testing Tools step by step guide :${NC}"
+    echo -e "${CYAN}1) nmap: Network exploration and security auditing tool${NC}"
+    echo -e "${MAGENTA}2) nikto: Web server scanner${NC}"
+    echo -e "${CYAN}3) LEGION: Automated web application security scanner${NC}"
+    echo -e "${MAGENTA}4) OWASP ZAP: Web application security testing tool${NC}"
+    echo -e "${CYAN}5) John the Ripper: Password cracking tool${NC}"
+    echo -e "${MAGENTA}6) SQLmap: SQL Injection and database takeover tool${NC}"
+    echo -e "${CYAN}7) Metasploit Framework: Penetration testing framework${NC}"
+    echo -e "${MAGENTA}8) Wapiti: Web Application Vulnerability Scanner${NC}"
+    echo -e "${YELLOW}9) Go Back${NC}"
+    display_asterisk
+    
+}
+
+# Function to display the step by step guide of the Secure Code Review tools.
+
+display_step_by_step_guide_secure_code_review(){
+    
+    echo -e "${YELLOW}Secure Code Review Tools:${NC}"
+    echo -e "${CYAN}1) osv-scanner: Scan a directory for vulnerabilities${NC}"
+    echo -e "${MAGENTA}2) snyk cli: Test code locally or monitor for vulnerabilities${NC}"
+    echo -e "${CYAN}3) brakeman: Scan a Ruby on Rails application for security vulnerabilities${NC}"
+    echo -e "${MAGENTA}4) bandit: Security linter for Python code${NC}"
+    echo -e "${CYAN}5) SonarQube: Continuous inspection of code quality and security${NC}"
+    echo -e "${YELLOW}6) Go Back"
+    display_asterisk
+    
+}
+
+# Function for handling the guide for the OSV scanner , which helps to update the documentation, once there is any new release.
+handle_step_by_step_SCR_OSV_Scanner(){
+    local choice
+    while true; do
+        echo "   - OSV Scanner is a tool for detecting security vulnerabilities in open source projects. To learn more, click on the following link below."
+        echo "   - Download: https://github.com/google/osv-scanner"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        case $choice in
+            1) break ;;
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+        esac
+        
+    done
+    
+}
+
+# Function for handling the guide for the Snyc code scanner , which helps to update the documentation, once there is any new release.
+handle_step_by_step_SCR_Snyk(){
+    
+    local choice
+    while true; do
+        echo "   - Snyk ia a CLI tool to find and fix vulnerabilities in your code, dependencies, containers, and infrastructure as code."
+        echo "   -  To Download and learn more: https://snyk.io/download/"
+        echo "   - Run code test locally: snyk code test <directory>"
+        echo "   - Monitor for vulnerabilities: snyk monitor <directory> --all-projects"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+    
+    
+    
+}
+
+# Function for handling the guide for the brakeman tool, which helps to update the documentation, once there is any new release.
+handle_step_by_step_SCR_brakeman(){
+    
+    local choice
+    
+    while true; do
+        
+        echo "   - Barakeman is a static analysis tool specifically designed to find security issues in Ruby on Rails applications."
+        echo "   - Download: https://github.com/presidentbeef/brakeman"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+    
+    
+    
+}
+
+# Function for handling the guide for the bandit tool , which helps to update the documentation, once there is any new release.
+handle_step_by_step_SCR_bandit(){
+    
+    local choice
+    
+    while true; do
+        
+        echo "   - A tool designed to find common security issues in Python code."
+        echo "   - Download: https://bandit.readthedocs.io/en/latest/"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+    
+    
+    
+}
+
+# Function for handling the guide for the SonarQube , which helps to update the documentation, once there is any new release.
+handle_step_by_step_SCR_sonar(){
+    
+    local choice
+    
+    while true; do
+        
+        echo "   - An open-source platform for continuous inspection of code quality and security to detect bugs, vulnerabilities, and code smells."
+        echo "   - Download: https://www.sonarqube.org/downloads/"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+    
+    
+    
+}
+
+# Function for handling the guide for the nmap pentest tool, which helps to update the documentation, once there is any new release.
+handle_step_by_step_pentest_nmap(){
+    
+    local choice
+    
+    while true; do
+        
+        echo "   - A versatile and powerful tool for network discovery and security auditing, widely used for network inventory, managing service upgrade schedules, and monitoring host or service uptime."
+        echo "   - Download: https://nmap.org/download.html"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+}
+
+# Function for handling the guide for the nitko pentest tool, which helps to update the documentation, once there is any new release.
+handle_step_by_step_pentest_nitko(){
+    
+    local choice
+    
+    while true; do
+        
+        echo "   - An open source web server scanner that performs comprehensive tests against web servers for multiple items, including over 6700 potentially dangerous files/programs and outdated versions."
+        echo "   - Download: https://cirt.net/nikto/"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+}
+
+# Function for handling the guide for the legion pentest tool, which helps to update the documentation, once there is any new release.
+handle_step_by_step_pentest_legion(){
+    
+    local choice
+    
+    while true; do
+        
+        echo "   - A toolkit for web application testing that automates the scanning process to identify common vulnerabilities and exposures in web applications."
+        echo "   - Download: https://github.com/GoVanguard/legion"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+}
+
+# Function for handling the guide for the OWASP ZAP pentest tool, which helps to update the documentation, once there is any new release.
+handle_step_by_step_pentest_owasp_zap(){
+    
+    local choice
+    
+    while true; do
+        
+        echo "   - An open-source web application security scanner and testing tool maintained by the OWASP community, used for finding vulnerabilities in web applications."
+        echo "   - Download: https://github.com/zaproxy/zaproxy/releases"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+}
+
+# Function for handling the guide for the John the ripper pentest tool, which helps to update the documentation, once there is any new release.
+handle_step_by_step_pentest_John_the_ripper(){
+    
+    local choice
+    
+    while true; do
+        
+        echo "   - A powerful and flexible password cracking tool that supports various encryption algorithms and is used to crack password hashes through brute-force attacks."
+        echo "   - Download: https://www.openwall.com/john/"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+}
+
+# Function for handling the guide for the SQLmap pentest tool, which helps to update the documentation, once there is any new release.
+handle_step_by_step_pentest_SQLmap(){
+    
+    local choice
+    
+    while true; do
+        
+        echo "   - An open-source penetration testing tool that automates the process of detecting and exploiting SQL injection vulnerabilities and taking over database servers."
+        echo "   - Download: https://sqlmap.org/"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+}
+
+# Function for handling the guide for the metasploit pentest tool, which helps to update the documentation, once there is any new release.
+handle_step_by_step_pentest_metasploit(){
+    
+    local choice
+    
+    while true; do
+        
+        echo "   - A comprehensive open-source framework for developing, testing, and executing exploits against target systems, widely used for penetration testing and vulnerability assessment."
+        echo "   - Download: https://metasploit.help.rapid7.com/docs/installing-the-metasploit-framework"
+        echo -e "${YELLOW}1) Go Back${NC}"
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) break ;;
+            
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+}
+
+# Function for handling the guide for the Wapiti pentest tool, which helps to update the documentation, once there is any new release.
+handle_step_by_step_pentest_wapiti() {
+    echo -e "${YELLOW}Wapiti Step-by-Step Guide:${NC}"
+    echo -e "${CYAN}1) Install Wapiti:${NC}"
+    echo "   To install Wapiti, run the following command:"
+    echo "   sudo apt-get install wapiti"
+    
+    echo -e "${CYAN}2) Run Wapiti:${NC}"
+    echo "   To run Wapiti on a target URL, use the following command:"
+    echo "   wapiti -u http://example.com -o output_directory"
+    
+    echo -e "${CYAN}3) View Results:${NC}"
+    echo "   After Wapiti completes its scan, the results will be available in the output directory specified."
+    
+    echo -e "${CYAN}4) Update Documentation:${NC}"
+    echo "   Ensure that you regularly check for updates to Wapiti and update the documentation accordingly."
+    
+    echo -e "${YELLOW}End of Wapiti Step-by-Step Guide${NC}"
+}
+
+
 
 # Function for Penetration Testing Tools
 handle_penetration_testing_tools() {
@@ -94,7 +421,8 @@ handle_penetration_testing_tools() {
             5) run_john ;;
             6) run_sqlmap ;;
             7) run_metasploit ;;
-            8) break ;;
+            8) run_wapiti ;;  
+            9) break ;;
             *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
         esac
     done
@@ -110,9 +438,91 @@ handle_secure_code_review_tools() {
             1) run_osv_scanner ;;
             2) run_snyk ;;
             3) run_brakeman ;;
-            4) break ;;
+            4) run_bandit ;;
+            5) run_sonarqube ;;
+            6) break ;;
             *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
         esac
+    done
+}
+# Function for handling the step by step guide
+
+handle_step_by_step_guide(){
+    
+    local choice
+    
+    while true; do
+        
+        display_step_by_step_guide_menu
+        
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) handle_step_by_step_guide_Pentest;;
+            2) handle_step_by_step_guide_SCR;;
+            3) break ;;
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+    
+}
+
+handle_step_by_step_guide_SCR(){
+    
+    local choice
+    
+    while true; do
+        
+        display_step_by_step_guide_secure_code_review
+        
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) handle_step_by_step_SCR_OSV_Scanner;;
+            2) handle_step_by_step_SCR_Snyk ;;
+            3) handle_step_by_step_SCR_brakeman;;
+            4) handle_step_by_step_SCR_bandit;;
+            5) handle_step_by_step_SCR_sonar ;;
+            6) break;;
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
+    done
+    
+    
+    
+}
+
+handle_step_by_step_guide_Pentest(){
+    
+    local choice
+    
+    while true; do
+        
+        display_step_by_step_guide_pen_testing
+        
+        read -p "Choose an option: " choice
+        
+        case $choice in
+            
+            1) handle_step_by_step_pentest_nmap;;
+            2) handle_step_by_step_pentest_nitko;;
+            3) handle_step_by_step_pentest_legion;;
+            4) handle_step_by_step_pentest_owasp_zap;;
+            5) handle_step_by_step_pentest_John_the_ripper;;
+            6) handle_step_by_step_pentest_SQLmap;;
+            7) handle_step_by_step_pentest_metasploit;;
+            8) handle_step_by_step_pentest_wapiti ;;  
+            9) break ;;
+            *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
+            
+        esac
+        
     done
 }
 
@@ -121,11 +531,41 @@ run_nmap(){
     output_file="${output}_nmap"
     read -p "Enter URL or IP address to scan: " url
     if [[ "$output_to_file" == "y" ]]; then
-        nmap -oN "$output_file" "$url" 
+        nmap -oN "$output_file" "$url"
     else
         nmap "$url"
     fi
     echo -e "${GREEN} Nmap Operation completed.${NC}"
+}
+
+# Function to run Bandit
+run_bandit(){
+    output_file="${output}_bandit"
+    read -p "Enter the directory to scan: " directory
+    if [[ "$output_to_file" == "y" ]]; then
+        bandit -r "$directory" -o "$output_file" -f txt
+    else
+        bandit -r "$directory"
+    fi
+    echo -e "${GREEN} Bandit operation completed.${NC}"
+}
+
+#Function to run SonarQube
+run_sonarqube()
+{
+    # Check if SonarQube Docker container is already running or exists
+    if sudo docker ps -a --format '{{.Names}}' | grep -w "sonarqube" > /dev/null; then
+        echo -e "${YELLOW}A container named 'sonarqube' already exists. Removing the existing container...${NC}"
+        sudo docker rm -f sonarqube
+    fi
+
+    echo -e "${CYAN}Running SonarQube container...${NC}"
+    sudo docker run -d --name sonarqube -p 9001:9000 sonarqube
+    
+    echo -e "${GREEN}SonarQube is running at http://localhost:9001${NC}"
+    echo "Default credentials: "
+    echo "login: admin"
+    echo "password: admin"
 }
 
 # Function to run Nikto
@@ -150,7 +590,7 @@ run_legion(){
 
 # Function to run OWASP ZAP
 run_owasp_zap(){
-    read -p "Enter URL and port to scan (Example: http://localhost:4200): " url          
+    read -p "Enter URL and port to scan (Example: http://localhost:4200): " url
     zap -quickurl $url
     echo -e "${GREEN} OWASP ZAP Operation completed.${NC}"
 }
@@ -185,7 +625,7 @@ run_metasploit() {
     if [[ "$output_to_file" == "y" ]]; then
         sudo msfconsole | tee "$output_file.txt"
     else
-        sudo msfconsole 
+        sudo msfconsole
     fi
     echo -e "${GREEN} Metasploit operation completed.${NC}"
 }
@@ -196,10 +636,10 @@ run_osv_scanner(){
     read -p "Enter directory to scan: " directory
     source ~/.bashrc
     if [[ "$output_to_file" == "y" ]]; then
-        osv-scanner --format table --output "$output_file" -r "$directory"  
-	else
-    	osv-scanner --recursive "$directory"
-	fi
+        osv-scanner --format table --output "$output_file" -r "$directory"
+    else
+        osv-scanner --recursive "$directory"
+    fi
     echo -e "${GREEN} OSV-Scanner Operation completed.${NC}"
 }
 
@@ -212,25 +652,25 @@ run_snyk(){
     Enter your choice (1/2): " snyk_option
     case $snyk_option in
         1)   if [[ "$output_to_file" == "y" ]]; then
-            read -p "Enter directory to scan (current directory ./): " directory
-            snyk code test $directory > $output_file
+                read -p "Enter directory to scan (current directory ./): " directory
+                snyk code test $directory > $output_file
             else
-                    read -p "Enter directory to scan (current directory ./): " directory
-                            snyk code test $directory
+                read -p "Enter directory to scan (current directory ./): " directory
+                snyk code test $directory
             fi
-         ;;
+        ;;
         2) if [[ "$output_to_file" == "y" ]]; then
-            read -p "Enter directory to scan (current directory ./): " directory
-            snyk monitor $directory --all-projects > $output_file
+                read -p "Enter directory to scan (current directory ./): " directory
+                snyk monitor $directory --all-projects > $output_file
             else
-            snyk monitor $directory --all-projects
+                snyk monitor $directory --all-projects
             fi
             echo -e "${GREEN} SNYK Operation completed.${NC}"
-            ;;
+        ;;
         *)
             echo -e "${RED}Invalid choice!${NC}"
-            ;;
-        esac
+        ;;
+    esac
 }
 
 # Function to run Brakeman
@@ -242,7 +682,7 @@ run_brakeman(){
     else
         sudo brakeman "$directory" --force
     fi
-        echo -e "${GREEN} Brakeman Operation completed.${NC}"
+    echo -e "${GREEN} Brakeman Operation completed.${NC}"
 }
 
 # Function to log messages with a timestamp to the log file
@@ -251,11 +691,22 @@ log_message() {
     echo "$(date +"%Y-%m-%d %H:%M:%S") - $message" >> "$LOG_FILE"
 }
 
+# Function to run Wapiti
+run_wapiti() {
+    read -p "Enter the URL to scan: " url
+    read -p "Enter the output file path: " output_file
+    
+    # Run Wapiti scan
+    wapiti -u "$url" -o "$output_file"
+    
+    echo -e "${GREEN}Wapiti scan completed. Results saved to $output_file.${NC}"
+}
+
 # Function to check for updates for the installed security tools
 check_updates() {
     log_message "Checking for updates..."
     
-     # Update APT package lists if they haven't been updated in the last day
+    # Update APT package lists if they haven't been updated in the last day
     if [ $(sudo find /var/lib/apt/lists -type f -mtime +1 | wc -l) -gt 0 ]; then
         sudo apt update -qq
     fi
@@ -269,6 +720,7 @@ check_updates() {
     update_john
     update_sqlmap
     update_metasploit
+    update_wapiti  
 }
 
 # Function to update Brakeman (a security scanner for Ruby on Rails applications)
@@ -345,7 +797,7 @@ update_john() {
         current_version=$(dpkg-query -W -f='${Version}' john 2>/dev/null)
         # Get the latest available version
         latest_version=$(apt-cache policy john | grep 'Candidate:' | awk '{print $2}')
-
+        
         if [ "$current_version" != "$latest_version" ]; then
             echo -e "${MAGENTA}Updating John the Ripper...${NC}"
             sudo apt install -y john > /dev/null 2>&1
@@ -353,6 +805,16 @@ update_john() {
         else
             log_message "John the Ripper is up-to-date (version $current_version)"
         fi
+    fi
+}
+
+# Function to update bandit
+update_bandit() {
+    pip install --upgrade bandit > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        log_message "Bandit updated successfully"
+    else
+        log_message "Failed to update Bandit"
     fi
 }
 
@@ -369,7 +831,7 @@ update_sqlmap() {
             echo -e "${MAGENTA}sqlmap update available. Updating...${NC}"
             sudo sqlmap --update
             log_message "sqlmap updated"
-        elif echo "$output" | grep -q "your sqlmap version is outdated"; then
+            elif echo "$output" | grep -q "your sqlmap version is outdated"; then
             echo -e "${MAGENTA}sqlmap version is outdated. Updating...${NC}"
             sudo sqlmap --update
             log_message "sqlmap updated"
@@ -404,6 +866,27 @@ update_metasploit() {
     fi
 }
 
+# Function to update Wapiti
+update_wapiti() {
+    echo -e "${YELLOW}Updating Wapiti...${NC}"
+    
+    # Check if pip3 is available and Wapiti was installed via pip
+    if command -v pip3 &> /dev/null; then
+        echo -e "${CYAN}Updating Wapiti using pip3...${NC}"
+        pip3 install --upgrade wapiti3
+    else
+        # If pip3 is not available, check if Wapiti was installed from source
+        if [ -d "$HOME/wapiti" ]; then
+            echo -e "${CYAN}Updating Wapiti from source...${NC}"
+            cd "$HOME/wapiti" || { echo -e "${RED}Failed to change directory to Wapiti source.${NC}"; return 1; }
+            git pull origin master
+            python3 setup.py install
+        else
+            echo -e "${RED}Wapiti installation not found or not supported update method.${NC}"
+        fi
+    fi
+}
+
 # Function to install Go (programming language) if not already installed
 install_go() {
     echo -e "${MAGENTA}Installing Go...${NC}"
@@ -413,6 +896,41 @@ install_go() {
     else
         echo -e "${RED}Failed to install Go.${NC}"
         exit 1
+    fi
+}
+
+install_sonarqube() {
+    # Check if SonarQube Docker container is already installed
+    if ! sudo docker images | grep -q sonarqube; then
+        echo -e "${CYAN}Pulling SonarQube Docker image...${NC}"
+        sudo docker pull sonarqube
+        
+        echo -e "${CYAN}Downloading and installing SonarScanner...${NC}"
+        wget -O sonarscanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux-x64.zip?_gl=1*1vsu6fm*_gcl_au*MTA1MTc2MzQ4NS4xNzI1NTQ4Njcw*_ga*MTIzMjQ3ODQ1OC4xNzI1NTQ4Njcw*_ga_9JZ0GZ5TC6*MTcyNTU0ODY3MC4xLjEuMTcyNTU0OTY2MS42MC4wLjA.
+        sudo unzip sonarscanner-cli.zip -d /opt/sonarscanner
+
+        #Add path to ./bashrc
+        echo 'export PATH=$PATH:/opt/sonarscanner/sonar-scanner-6.1.0.4477-linux-x64/bin' >> ~/.bashrc
+        source ~/.bashrc
+        
+        echo -e "${GREEN}SonarQube and SonarScanner installed successfully!${NC}"
+    else
+        echo -e "${GREEN}SonarQube is already installed.${NC}"
+    fi
+}
+
+install_bandit() {
+    if ! command -v bandit &> /dev/null; then
+        echo -e "${CYAN}Installing Bandit...${NC}"
+        sudo pip install bandit
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}Bandit installed successfully!${NC}"
+        else
+            echo -e "${RED}Failed to install Bandit.${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${GREEN}Bandit is already installed.${NC}"
     fi
 }
 
@@ -506,7 +1024,7 @@ install_nikto() {
             # Display success message
             echo -e "${GREEN}nikto installed successfully!${NC}"
         else
-        #   Display failure message and exit script
+            #   Display failure message and exit script
             echo -e "${RED}Failed to install nikto.${NC}"
             exit 1
         fi
@@ -552,7 +1070,7 @@ install_owasp_zap() {
         if [ $? -eq 0 ]; then
             # Create directory for OWASP ZAP in /opt
             sudo mkdir -p /opt/owasp-zap
-	        # Change ownership of the OWASP ZAP directory to the current user
+            # Change ownership of the OWASP ZAP directory to the current user
             sudo chown -R $(whoami):$(whoami) /opt/owasp-zap
             # Extract the downloaded tar file to the OWASP ZAP directory
             tar -xf /tmp/ZAP_2.15.0_Linux.tar.gz -C /opt/owasp-zap/
@@ -626,6 +1144,35 @@ install_metasploit() {
     fi
 }
 
+# Function to install Wapiti (a vulnerability scanner) if not already installed
+install_wapiti() {
+    echo -e "${YELLOW}Checking for Wapiti installation...${NC}"
+
+    # Check if Wapiti is already installed
+    if command -v wapiti3 &> /dev/null; then
+        echo -e "${GREEN}Wapiti is already installed.${NC}"
+        return
+    fi
+
+    # Try to install Wapiti using pip3
+    if command -v pip3 &> /dev/null; then
+        echo -e "${CYAN}Installing Wapiti using pip3...${NC}"
+        pip3 install wapiti3
+    else
+        echo -e "${RED}pip3 not found. Trying to install Wapiti from source...${NC}"
+
+        # Clone the Wapiti repository and install from source
+        if [ ! -d "$HOME/wapiti" ]; then
+            echo -e "${CYAN}Cloning Wapiti repository...${NC}"
+            git clone https://github.com/andresriancho/wapiti.git "$HOME/wapiti"
+        fi
+
+        echo -e "${CYAN}Installing Wapiti from source...${NC}"
+        cd "$HOME/wapiti" || { echo -e "${RED}Failed to change directory to Wapiti source.${NC}"; return 1; }
+        python3 setup.py install
+    fi
+}
+
 # Function to check for updates
 check_updates() {
     # Prompt user to check for updates
@@ -635,12 +1182,14 @@ check_updates() {
         # Log message indicating update check
         log_message "Checking for updates..."
         update_brakeman
+        update_bandit
         update_owasp_zap
         update_nikto
         update_nmap
         update_john
         update_sqlmap
         update_metasploit
+        update_wapiti  
         # Display success message
         echo -e "${GREEN}Updates checked successfully.${NC}"
     else
@@ -648,55 +1197,62 @@ check_updates() {
         echo -e "${YELLOW}Skipping updates check.${NC}"
     fi
 }
-    
+
 # Function to save vulnerabilities found by various tools to a file
 save_vulnerabilities() {
-    # Set the tool name to the first argument
+     # Set the tool name to the first argument
     local tool=$1
+    # Set the default directory to the user's home directory
+    local output_dir="$HOME"
     # Set the output file name based on the tool name
-    local output_file="$tool-vulnerabilities.txt"
+    local output_file="$output_dir/$tool-vulnerabilities.txt"
+    
     # Determine the command to run based on the tool name
     case $tool in
         "osv-scanner")
             # Scan the directory using osv-scanner and save output to the file
             osv-scanner scan "./$directory" > "$output_file"
-            ;;
+        ;;
         "snyk")
             # Run snyk code scan and save output to the file
             snyk code scan > "$output_file"
-            ;;
+        ;;
         "brakeman")
             # Run brakeman scan and save output to the file
             sudo brakeman --force > "$output_file"
-            ;;
+        ;;
         "nmap")
             # Run nmap scan and save output to the file
             nmap -v -A "$url" > "$output_file"
-            ;;
+        ;;
         "nikto")
             # Run nikto scan and save output to the file
             nikto -h "$url" > "$output_file"
-            ;;
+        ;;
         "legion")
             # Run legion scan and save output to the file
             legion "$url" > "$output_file"
-            ;;
+        ;;
         "john")
             # Run John the Ripper and save output to the file
             john --show --format=raw-md5 "$input_file" > "$output_file"
-            ;;
+        ;;
         "sqlmap")
             # Run SQLmap scan and save output to the file
             sqlmap -u "$url" --batch --output-dir="$output_dir" > "$output_file"
-            ;;
+        ;;
         "metasploit")
             # Run Metasploit scan and save output to the file
             msfconsole -x "use auxiliary/scanner/portscan/tcp; set RHOSTS $url; run; exit" > "$output_file"
-            ;;
+        ;;
+        "wapiti")
+            # Run Wapiti scan and save output to the file
+            wapiti -u "$url" -o "$output_file"
+        ;;
         *)
             echo -e "${RED}Unsupported tool: $tool${NC}"
             return 1
-            ;;
+        ;;
     esac
     # Display the found vulnerabilities
     echo -e "${GREEN}Vulnerabilities found:${NC}"
@@ -714,8 +1270,8 @@ save_vulnerabilities() {
 
 # Main function to check and install tools
 main() {
- 
-   # Initialize log file by clearing its contents
+    
+    # Initialize log file by clearing its contents
     echo "" > "$LOG_FILE"
     
     # Check if npm is installed; if not, install it
@@ -732,6 +1288,8 @@ main() {
     install_snyk_cli
     # Check and install brakeman
     install_brakeman
+    # Check and install bandit
+    install_bandit
     # Check and install nmap
     install_nmap
     # Check and install nikto
@@ -746,28 +1304,32 @@ main() {
     install_sqlmap
     # Check and install metasploit
     install_metasploit
+    # install sonarqube
+    install_sonarqube
+    # Check and install wapiti
+    install_wapiti
     
     # Check for updates for the installed tools
     check_updates
-
+    
     # Ask if the user wants to output to a file
     read -p "Do you want to output results to a file? (y/n): " output_to_file
     if [[ "$output_to_file" == "y" ]]; then
         read -p "Enter the output file path: " output
     fi
-
+    
     while true; do
         display_main_menu
         read -p "Choose an option: " main_choice
         case $main_choice in
             1) handle_penetration_testing_tools ;;
             2) handle_secure_code_review_tools ;;
-            3) display_step_by_step_guide_menu ;;
+            3) handle_step_by_step_guide ;;
             4) echo -e "${YELLOW}Exiting...${NC}"
                 log_message "Script ended"
-               exit 0 ;;
+            exit 0 ;;
             *) echo -e "${RED}Invalid choice, please try again.${NC}"
-                log_message "Invalid user input" ;;
+            log_message "Invalid user input" ;;
         esac
     done
 }
