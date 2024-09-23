@@ -15,7 +15,7 @@ Added AI functionality to generate insights and suggestions based on the tool's 
 4.	Included a Step-by-step Guide:
 Developed a guide to assist beginners in learning and using the tools more effectively. 
 5.  Added New Tools:
-Added three new Pen-Testing tools: John the Ripper, Metasploit, and SQLmap. Added two new Secure Code Review tools: SonarQube and Bandit. Expands the tool's capabilities, providing users with more options for both Pen-Testing and Secure Code Review, thus improving their security assessment efforts.
+Added four new Pen-Testing tools: John the Ripper, Metasploit, SQLmap, and Wapiti. Added two new Secure Code Review tools: SonarQube and Bandit. Expands the tool's capabilities, providing users with more options for both Pen-Testing and Secure Code Review, thus improving their security assessment efforts.
 
 **Bug Fixes**
 
