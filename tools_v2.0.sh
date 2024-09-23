@@ -748,6 +748,29 @@ run_osv_scanner(){
 # Function to run snyk cli
 run_snyk(){
     output_file="${output}_snyk"
+
+    # Check if Snyk is authenticated
+	snyk_auth_check=$(snyk auth --help | grep -i "You are authenticated")
+	if [[ -z "$snyk_auth_check" ]]; then
+		echo -e "${YELLOW}Snyk is not authenticated. Redirecting to browser for authentication...${NC}"
+		snyk auth
+		# Check if authentication was successful
+		if [[ $? -ne 0 ]]; then
+			echo -e "${RED}Snyk authentication failed! ${NC}"
+			read -p "Would you like to retry authentication? (y/n): " retry
+			if [[ "$retry" == "y" ]]; then
+				snyk auth
+			else
+				echo -e "${RED}Snyk authentication failed! ${NC}"
+				exit 1
+			fi
+		else
+			echo -e "${GREEN}Snyk authentication successful!${NC}"
+		fi
+	else
+		echo -e "${GREEN}Snyk is already authenticated.${NC}"
+	fi
+    
     read -p "Select Snyk option:
     1) Run code test locally
     2) Monitor for vulnerabilities and see results in Snyk UI
@@ -971,13 +994,37 @@ update_metasploit() {
 
 # Function to install Go (programming language) if not already installed
 install_go() {
-    echo -e "${MAGENTA}Installing Go...${NC}"
-    sudo apt update && sudo apt install -y golang-go
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Go installed successfully!${NC}"
+    # Check current Go version
+    if command -v go &> /dev/null; then
+        version=$(go version | awk '{print $3}')
     else
-        echo -e "${RED}Failed to install Go.${NC}"
-        exit 1
+        version=""
+    fi
+    release=$(wget -qO- "https://golang.org/VERSION?m=text")
+    if [[ $version == "$release" ]]; then
+        echo "Go is already up-to-date."
+        return
+    fi
+    git clone https://github.com/udhos/update-golang &> /dev/null
+    cd update-golang  || exit 1
+    # Run the update script, suppress all output
+    {
+        sudo ./update-golang.sh &> /dev/null
+    } || {
+        echo "Failed to update Go."
+        return
+    }
+    # Update PATH
+    echo "export PATH=\$PATH:${HOME}/apps/go/bin" >> ~/.bashrc
+    source ~/.bashrc
+    source /etc/profile.d/golang_path.sh  # Update current shell's PATH
+
+    # Verify installation
+    version=$(go version | awk '{print $3}' 2>/dev/null) || true
+    if [ -n "$version" ]; then
+        echo -e "${GREEN}Dependencies installed successfully!${NC}"
+    else
+        echo "Failed to get Go version."
     fi
 }
 
@@ -1064,6 +1111,7 @@ install_brakeman() {
 
 # Function to install osv-scanner (a vulnerability scanner) if not already installed
 install_osv_scanner() {
+    install_go
     if ! command -v osv-scanner &> /dev/null; then
         echo -e "${CYAN}Installing osv-scanner...${NC}"
         go install github.com/google/osv-scanner/cmd/osv-scanner@v1
@@ -1371,7 +1419,7 @@ generate_ai_insights() {
             echo -e "\nAI-Generated Insights:\n$INSIGHTS" >> "$output_file"
         else
             # Display the AI-generated insights
-            display_asterisk
+            #display_asterisk
             echo -e "${YELLOW}"
             echo -e "+-----------------------------+"
             echo -e "|          Insights           |"
@@ -1379,10 +1427,10 @@ generate_ai_insights() {
             echo -e "${BLUE}"
             echo -e "$INSIGHTS"
             echo -e "${NC}"
-            echo -e "${YELOW}"
+            echo -e "${YELLOW}"
             echo -e "+-----------------------------+"
 
-            display_asterisk
+            #display_asterisk
         fi
     fi
 }
