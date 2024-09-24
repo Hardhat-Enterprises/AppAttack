@@ -1,0 +1,40 @@
+---
+title: App-Attack Docs
+template: splash
+hero:
+  tagline: Welcome to App-Attack
+  image:
+    file: ../../assets/app-attack-logo.png
+  actions:
+    - text: PT, SRC and TD Guide
+      link: /guides/index-routing/
+      icon: right-arrow
+      variant: primary
+    - text: Hardhat Enterprises
+      link: https://hardhatdocs.netlify.app/
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import TimelineComponent from '../../components/timeline.astro'
+import Footer from '../../components/footer.astro'
+
+
+## Our Collaborations
+<TimelineComponent/>
+
+## Services
+<CardGrid >
+	<Card title="Penetration Testing" icon="seti:stylelint">
+	</Card>
+	<Card title="Secure Code Review" icon="add-document">
+	</Card>
+	<Card title="Tool Development" icon="setting">
+	</Card>
+</CardGrid>
+
+---
+
+<Footer />
+
+{/* Charanpreet: https://github.com/xOscarCodes */}
