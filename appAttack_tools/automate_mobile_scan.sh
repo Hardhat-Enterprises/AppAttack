@@ -16,35 +16,20 @@ BCyan="\033[1;36m"
 White="\033[1;37m"
 NC="\033[0m"
 
-# === Banner ===
-display_banner() {
-    clear
-    echo -e "${BRed}"
-    echo -e " █████╗ ██████╗ ██████╗     ███████╗██╗  ██╗██████╗ ██╗      ██████╗ ██╗████████╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗"
-    echo -e "██╔══██╗██╔══██╗██╔══██╗    ██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔═══██╗██║╚══██╔══╝██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║"
-    echo -e "███████║██████╔╝██████╔╝    █████╗   ╚███╔╝ ██████╔╝██║     ██║   ██║██║   ██║   ███████║   ██║   ██║██║   ██║██╔██╗ ██║"
-    echo -e "██╔══██║██╔═══╝ ██╔═══╝     ██╔══╝   ██╔██╗ ██╔═══╝ ██║     ██║   ██║██║   ██║   ██╔══██║   ██║   ██║██║   ██║██║╚██╗██║"
-    echo -e "██║  ██║██║     ██║         ███████╗██╔╝ ██╗██║     ███████╗╚██████╔╝██║   ██║   ██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║"
-    echo -e "╚═╝  ╚═╝╚═╝     ╚═╝         ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝"
-    echo -e "${NC}"
-    echo -e "${BYellow}              Automated Mobile Scan Workflow${NC}"
-    echo -e "${BBlue}           A Professional Penetration Testing Toolkit${NC}"
-    echo -e ""
-}
 
 # === Automated Mobile Scan Workflow ===
 run_automated_mobile_scan() {
-    display_banner
+    
     local apk_path="$1"
 
     if [ -z "$apk_path" ]; then
         echo -e "${BRed}Error: APK file path not provided.${NC}"
-        exit 1
+        return 1
     fi
 
     if [ ! -f "$apk_path" ]; then
         echo -e "${BRed}Error: APK file not found at '$apk_path'.${NC}"
-        exit 1
+        return 1
     fi
 
     # Start Android Emulator

@@ -12,36 +12,24 @@ BCyan="\033[1;36m"
 White="\033[1;37m"
 NC="\033[0m"
 
-# === Banner ===
-display_banner() {
-    clear
-    echo -e "${BRed}"
-    echo -e " █████╗ ██████╗ ██████╗     ███████╗██╗  ██╗██████╗ ██╗      ██████╗ ██╗████████╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗"
-    echo -e "██╔══██╗██╔══██╗██╔══██╗    ██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔═══██╗██║╚══██╔══╝██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║"
-    echo -e "███████║██████╔╝██████╔╝    █████╗   ╚███╔╝ ██████╔╝██║     ██║   ██║██║   ██║   ███████║   ██║   ██║██║   ██║██╔██╗ ██║"
-    echo -e "██╔══██║██╔═══╝ ██╔═══╝     ██╔══╝   ██╔██╗ ██╔═══╝ ██║     ██║   ██║██║   ██║   ██╔══██║   ██║   ██║██║   ██║██║╚██╗██║"
-    echo -e "██║  ██║██║     ██║         ███████╗██╔╝ ██╗██║     ███████╗╚██████╔╝██║   ██║   ██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║"
-    echo -e "╚═╝  ╚═╝╚═╝     ╚═╝         ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝"
-    echo -e "${NC}"
-    echo -e "${BYellow}              Trend Analysis Report Generation${NC}"
-    echo -e "           A Professional Penetration Testing Toolkit${NC}"
-    echo -e ""
-}
 
 # === Trend Analysis Report Generation ===
 create_trend_analysis_report() {
-    display_banner
-
+    
     read -p "Enter the directory containing the scan reports: " reports_dir
 
     if [ ! -d "$reports_dir" ]; then
         echo -e "${BRed}Error: Directory not found.${NC}"
-        exit 1
+        return 1
     fi
 
     echo -e "${BGreen}[*] Generating trend analysis report...${NC}"
 
-    trend_report="trend_analysis_report_$(date +%F_%H-%M-%S).txt"
+    timestamp=$(date +%F_%H-%M-%S)
+    AUTOMATED_TREND_REPORT_OUTPUT_DIR="$OUTPUT_DIR/automated_trend_report/$timestamp"
+    mkdir -p $AUTOMATED_TREND_REPORT_OUTPUT_DIR
+
+    trend_report="$AUTOMATED_TREND_REPORT_OUTPUT_DIR/trend_report.txt"
 
     echo -e "${BYellow}### Trend Analysis Report ###${NC}" > "$trend_report"
 

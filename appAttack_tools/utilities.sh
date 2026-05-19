@@ -10,6 +10,7 @@ if [[ -z "$GEMINI_API_KEY" ]]; then
     fi
 fi
 
+
 # Define the log file path where the script logs messages
 LOG_FILE="$HOME/security_tools.log"
 

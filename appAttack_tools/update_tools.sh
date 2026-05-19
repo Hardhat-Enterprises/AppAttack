@@ -30,6 +30,16 @@ check_updates() {
                 update_tool_dpkg reaver
                 update_tool_dpkg ncrack
                 update_tool_dpkg john
+                update_tool_dpkg subfinder
+                update_tool_dpkg httpx-toolkit
+                update_tool_dpkg hydra
+
+                update_tool_dpkg feroxbuster
+                update_tool_dpkg theharvester
+                update_tool_dpkg enum4linux
+                update_tool_dpkg whatweb
+                update_tool_dpkg amass
+                
 
                 cd "$tool_directory"
 

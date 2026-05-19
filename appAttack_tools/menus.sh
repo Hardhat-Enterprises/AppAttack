@@ -3,7 +3,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/automate_recon.sh"
 source "$SCRIPT_DIR/automate_reconnaissance.sh"
-source "$SCRIPT_DIR/automate_vulnerability_scan.sh"
+# source "$SCRIPT_DIR/automate_vulnerability_scan.sh"
 source "$SCRIPT_DIR/auto_exploitation.sh"
 source "$SCRIPT_DIR/automate_api_recon.sh"
 source "$SCRIPT_DIR/automate_post_exploitation.sh"
@@ -48,7 +48,7 @@ display_main_menu() {
 
 display_mobile_security_tools_menu() {
     echo -e "\n${BYellow}╔════════════════════════════════════════════╗${NC}"
-    echo -e "${BYellow}║        Mobile Security Tools             ║${NC}"
+    echo -e "${BYellow}║        Mobile Security Tools               ║${NC}"
     echo -e "${BYellow}╚════════════════════════════════════════════╝${NC}"
     echo -e "${BCyan}1)${NC} ${White}MobSF: Mobile Security Framework${NC}"
     echo -e "${BCyan}2)${NC} ${White}Start Android Emulator with mitmproxy${NC}"
@@ -149,19 +149,18 @@ display_step_by_step_guide_menu() {
 # Function to display Automated Processes menu
 display_automated_processes_menu() {
     echo -e "\n${BYellow}╔════════════════════════════════════════════╗${NC}"
-    echo -e "${BYellow}║        Automated Processes               ║${NC}"
+    echo -e "${BYellow}║        Automated Processes                 ║${NC}"
     echo -e "${BYellow}╚════════════════════════════════════════════╝${NC}"
     echo -e "${BCyan}1)${NC} ${White}Reconnaissance${NC}"
-    echo -e "${BCyan}2)${NC} ${White}Vulnerability Scanning${NC}"
-    echo -e "${BCyan}3)${NC} ${White}Exploitation${NC}"
-    echo -e "${BCyan}4)${NC} ${White}Post-Exploitation${NC}"
-    echo -e "${BCyan}5)${NC} ${White}Reporting${NC}"
-    echo -e "${BCyan}6)${NC} ${White}Web Application Footprinting${NC}"
-    echo -e "${BCyan}7)${NC} ${White}API Reconnaissance${NC}"
-    echo -e "${BCyan}8)${NC} ${White}Delta Report Generation${NC}"
-    echo -e "${BCyan}9)${NC} ${White}Trend Analysis Report Generation${NC}"
-    echo -e "${BCyan}10)${NC} ${White}Automated Mobile Scan${NC}"
-    echo -e "${BCyan}11)${NC} ${White}Workflow Builder${NC}"
+    echo -e "${BCyan}2)${NC} ${White}Exploitation${NC}"
+    echo -e "${BCyan}3)${NC} ${White}Post-Exploitation${NC}"
+    echo -e "${BCyan}4)${NC} ${White}Reporting${NC}"
+    echo -e "${BCyan}5)${NC} ${White}Web Application Footprinting${NC}"
+    echo -e "${BCyan}6)${NC} ${White}API Reconnaissance${NC}"
+    echo -e "${BCyan}7)${NC} ${White}Delta Report Generation${NC}"
+    echo -e "${BCyan}8)${NC} ${White}Trend Analysis Report Generation${NC}"
+    echo -e "${BCyan}9)${NC} ${White}Automated Mobile Scan${NC}"
+    echo -e "${BCyan}10)${NC} ${White}Workflow Builder${NC}"
     echo -e "${BCyan}0)${NC} ${White}Go Back${NC}"
     echo -e "${BYellow}╚════════════════════════════════════════════╝${NC}"
 }
@@ -313,21 +312,27 @@ handle_step_by_step_guide(){
 # Function to handle Automated Processes menu
 handle_automated_processes_menu() {
     local choice
+
+    if [[ "$output_to_file" == "n" ]]; then
+        echo -e "You cannot access this functionality without outputting results to a folder or file"
+        return 1
+    fi
+
     while true; do
         display_automated_processes_menu
         read -p "Choose an option: " choice
         case $choice in
             1) run_automated_scan ;; #automate_reconnaissance.sh
-            2) run_automated_vulnerability_scan ;; #automate_vulnerability_scan.sh
-            3) run_exploitation_menu ;; #auto_exploitation.sh
-            4) automate_post_exploitation ;; #automate_post_exploitation.sh - this is poorly implemented and exits after executing
-            5) automate_reporting ;; #automate_reporting.sh - this is poorly implemented and exits after executing
-            6) run_footprinting_workflow ;; #automate_footprinting.sh
-            7) run_api_recon_process ;; #autopate_api_recon.sh
-            8) create_delta_report ;; #create_delta_report.sh
-            9) create_trend_analysis_report ;; #create_trend_analysis_report.sh
-            10) run_automated_mobile_scan ;; #automate_mobile_scan.sh
-            11) handle_workflow_builder ;; #workflow_builder.sh
+            # 2) run_automated_vulnerability_scan ;; #automate_vulnerability_scan.sh
+            2) run_exploitation_scan ;; #auto_exploitation.sh
+            3) automate_post_exploitation ;; #automate_post_exploitation.sh - this is poorly implemented and exits after executing
+            4) automate_reporting ;; #automate_reporting.sh - this is poorly implemented and exits after executing
+            5) run_footprinting_workflow ;; #automate_footprinting.sh
+            6) run_api_recon_process ;; #autopate_api_recon.sh
+            7) create_delta_report ;; #create_delta_report.sh
+            8) create_trend_analysis_report ;; #create_trend_analysis_report.sh
+            9) run_automated_mobile_scan ;; #automate_mobile_scan.sh
+            10) handle_workflow_builder ;; #workflow_builder.sh
             0) break ;; # Go back to main menu
             *) echo -e "${RED}Invalid choice, please try again.${NC}" ;;
         esac
@@ -430,10 +435,10 @@ run_reporting_process() {
     echo "Final report generated at $report_file"
 }
 
-run_footprinting_workflow() {
-    echo "Running Web Application Footprinting..."
-    run_web_footprinting
-}
+# run_footprinting_workflow() {
+#     echo "Running Web Application Footprinting..."
+#     run_web_footprinting
+# }
 
 run_api_recon_process() {
     echo "Running API Reconnaissance Process..."

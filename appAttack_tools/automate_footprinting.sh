@@ -17,44 +17,44 @@ White="\033[1;37m"
 NC="\033[0m"
 
 # === Default Variables ===
-OUTPUT_DIR="footprinting_logs"
 TARGET_DOMAIN=""
-
-# === Banner ===
-display_banner() {
-    clear
-    echo -e "${BRed}"
-    echo -e " █████╗ ██████╗ ██████╗     ███████╗██╗  ██╗██████╗ ██╗      ██████╗ ██╗████████╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗"
-    echo -e "██╔══██╗██╔══██╗██╔══██╗    ██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔═══██╗██║╚══██╔══╝██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║"
-    echo -e "███████║██████╔╝██████╔╝    █████╗   ╚███╔╝ ██████╔╝██║     ██║   ██║██║   ██║   ███████║   ██║   ██║██║   ██║██╔██╗ ██║"
-    echo -e "██╔══██║██╔═══╝ ██╔═══╝     ██╔══╝   ██╔██╗ ██╔═══╝ ██║     ██║   ██║██║   ██║   ██╔══██║   ██║   ██║██║   ██║██║╚██╗██║"
-    echo -e "██║  ██║██║     ██║         ███████╗██╔╝ ██╗██║     ███████╗╚██████╔╝██║   ██║   ██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║"
-    echo -e "╚═╝  ╚═╝╚═╝     ╚═╝         ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝"
-    echo -e "${NC}"
-    echo -e "${BYellow}              Automated Web Application Footprinting Workflow${NC}"
-    echo -e "${BBlue}           A Professional Penetration Testing Toolkit${NC}"
-    echo -e ""
-}
 
 # === Footprinting Workflow ===
 run_footprinting_workflow() {
-    display_banner
+    
     read -p "Enter target domain: " target_domain
 
-    mkdir -p "$OUTPUT_DIR"
+    timestamp=$(date +%F_%H-%M-%S)
+    AUTOMATED_FOOTPRINTING_OUTPUT_DIR="$OUTPUT_DIR/automated_footprinting/$timestamp"
+    mkdir -p $AUTOMATED_FOOTPRINTING_OUTPUT_DIR
 
     echo -e "${BGreen}[*] Running subfinder on $target_domain...${NC}"
-    subfinder -d "$target_domain" -o "$OUTPUT_DIR/subdomains.txt"
+    subfinder -d "$target_domain" -o "$AUTOMATED_FOOTPRINTING_OUTPUT_DIR/subdomains.txt"
+
+    #if no subdomains are found, return
+    if [[ ! -s "$AUTOMATED_FOOTPRINTING_OUTPUT_DIR/subdomains.txt" ]]; then 
+        echo "No subdomains found"
+        echo -e "${BGreen}Footprinting workflow completed. Results in $AUTOMATED_FOOTPRINTING_OUTPUT_DIR${NC}"
+        return 1
+    fi
 
     echo -e "${BGreen}[*] Running httpx on the discovered subdomains...${NC}"
-    httpx -l "$OUTPUT_DIR/subdomains.txt" -o "$OUTPUT_DIR/live_hosts.txt"
+    httpx-toolkit -l "$AUTOMATED_FOOTPRINTING_OUTPUT_DIR/subdomains.txt" -o "$AUTOMATED_FOOTPRINTING_OUTPUT_DIR/live_hosts.txt"
+        
+    #if no lives hosts are found, return
+    if [[ ! -s "$AUTOMATED_FOOTPRINTING_OUTPUT_DIR/live_hosts.txt" ]]; then
+        echo "No live hosts found"
+        echo -e "${BGreen}Footprinting workflow completed. Results in $AUTOMATED_FOOTPRINTING_OUTPUT_DIR${NC}"
+        return 1
+    fi
 
     echo -e "${BGreen}[*] Running nmap on the live hosts...${NC}"
-    nmap -iL "$OUTPUT_DIR/live_hosts.txt" -oN "$OUTPUT_DIR/nmap_scan.txt"
+    nmap -iL "$AUTOMATED_FOOTPRINTING_OUTPUT_DIR/live_hosts.txt" -oN "$AUTOMATED_FOOTPRINTING_OUTPUT_DIR/nmap_scan.txt"
 
-    echo -e "${BGreen}[+] Footprinting workflow completed. Results in $OUTPUT_DIR${NC}"
+    echo -e "${BGreen}Footprinting workflow completed. Results in $AUTOMATED_FOOTPRINTING_OUTPUT_DIR${NC}"
+
+
+
+
 }
 
-# === Main Execution ===
-
-# run_footprinting_workflow
