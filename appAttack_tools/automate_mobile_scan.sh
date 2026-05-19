@@ -16,36 +16,22 @@ BCyan="\033[1;36m"
 White="\033[1;37m"
 NC="\033[0m"
 
-# === Banner ===
-display_banner() {
-    clear
-    echo -e "${BRed}"
-    echo -e " █████╗ ██████╗ ██████╗     ███████╗██╗  ██╗██████╗ ██╗      ██████╗ ██╗████████╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗"
-    echo -e "██╔══██╗██╔══██╗██╔══██╗    ██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔═══██╗██║╚══██╔══╝██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║"
-    echo -e "███████║██████╔╝██████╔╝    █████╗   ╚███╔╝ ██████╔╝██║     ██║   ██║██║   ██║   ███████║   ██║   ██║██║   ██║██╔██╗ ██║"
-    echo -e "██╔══██║██╔═══╝ ██╔═══╝     ██╔══╝   ██╔██╗ ██╔═══╝ ██║     ██║   ██║██║   ██║   ██╔══██║   ██║   ██║██║   ██║██║╚██╗██║"
-    echo -e "██║  ██║██║     ██║         ███████╗██╔╝ ██╗██║     ███████╗╚██████╔╝██║   ██║   ██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║"
-    echo -e "╚═╝  ╚═╝╚═╝     ╚═╝         ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝"
-    echo -e "${NC}"
-    echo -e "${BYellow}              Automated Mobile Scan Workflow${NC}"
-    echo -e "${BBlue}           A Professional Penetration Testing Toolkit${NC}"
-    echo -e ""
-}
 
 # === Automated Mobile Scan Workflow ===
 run_automated_mobile_scan() {
-    display_banner
-    local apk_path="$1"
 
-    if [ -z "$apk_path" ]; then
-        echo -e "${BRed}Error: APK file path not provided.${NC}"
-        return 1
+    #asking user for input file with validation
+    while true; do
+    read -p "Enter APK path: " APK_PATH
+    #check if string is empty OR if file does NOT exist
+    if [[ -z "$APK_PATH" ]]; then
+        echo "Please enter a path to the input APK file"
+    elif [[ ! -f "$APK_PATH" ]]; then
+        echo "File does not exist at '$APK_PATH'"
+    else 
+        break
     fi
-
-    if [ ! -f "$apk_path" ]; then
-        echo -e "${BRed}Error: APK file not found at '$apk_path'.${NC}"
-        return 1
-    fi
+    done
 
     # Start Android Emulator
     echo -e "${BGreen}[*] Starting Android Emulator...${NC}"
@@ -54,7 +40,7 @@ run_automated_mobile_scan() {
 
     # Install APK
     echo -e "${BGreen}[*] Installing APK...${NC}"
-    adb install "$apk_path"
+    adb install "$APK_PATH"
 
     # Start mitmproxy
     echo -e "${BGreen}[*] Starting mitmproxy...${NC}"

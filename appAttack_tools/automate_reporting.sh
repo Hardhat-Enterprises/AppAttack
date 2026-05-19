@@ -1,48 +1,41 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 automate_reporting(){
 
-usage() {
-  cat <<EOF
-Usage: $0 -t TOOL_NAME -i INPUT_FILE -o OUTPUT_FILE [-p PHASE] [-f FORMAT]
-  -t TOOL_NAME   : Name of the tool (e.g. nmap, hydra, etc.)
-  -i INPUT_FILE  : Raw output from the tool
-  -o OUTPUT_FILE : Path to consolidated report
-  -p PHASE       : Testing phase (Scanning, Exploitation, Post-Exploitation). Default: Scanning
-  -f FORMAT      : md | json | csv. Default: md
-EOF
-  return 1
-}
-
-# defaults
-PHASE="Scanning"
-FORMAT="md"
-
-# parse args
-while getopts "t:i:o:p:f:" opt; do
-  case "$opt" in
-    t) TOOL_NAME="$OPTARG" ;; 
-    i) INPUT_FILE="$OPTARG" ;; 
-    o) OUTPUT_FILE="$OPTARG" ;; 
-    p) PHASE="$OPTARG" ;; 
-    f) FORMAT="$OPTARG" ;; 
-    *) usage ;; 
-  esac
+#asking user for input file with validation
+while true; do
+  read -p "Enter input file location: " INPUT_FILE
+  #check if string is empty OR if file does NOT exist
+  if [[ -z "$INPUT_FILE" ]]; then
+    echo "Please enter a path to the input file"
+  elif [[ ! -f "$INPUT_FILE" ]]; then
+    echo "File does not exist at '$INPUT_FILE'"
+  else 
+    break
+  fi
 done
 
-# validate required
-if [[ -z "${TOOL_NAME:-}" || -z "${INPUT_FILE:-}" || -z "${OUTPUT_FILE:-}" ]]; then
-  usage
-fi
+#asking user for tool name with validation. tool names can only be nmap, hydra, or nikto
+while true; do
+  read -p "Enter tool name (nmap, hydra, or nikto): " TOOL_NAME
 
-# ensure input exists
-if [[ ! -f "$INPUT_FILE" ]]; then
-  echo "[WARNING] Input file not found: $INPUT_FILE" >&2
-  return 0
-fi
+  #converting tool name to lowercase to prevent parsing errors
+  TOOL_NAME=$(echo "$TOOL_NAME" | tr '[:upper:]' '[:lower:]')
 
-# prepare output directory
-mkdir -p "$(dirname "$OUTPUT_FILE")"
+  if [[ -z "$TOOL_NAME" ]]; then
+    echo "Please enter the name of the tool." 
+  elif [[ "$TOOL_NAME" != "nmap" && "$TOOL_NAME" != "hydra" && "$TOOL_NAME" != "nikto" ]]; then
+        echo "'$TOOL_NAME' is invalid. Please choose from: nmap, hydra, nikto."
+  else 
+    break
+  fi
+done
+
+
+timestamp=$(date +%F_%H-%M-%S)
+AUTOMATED_REPORTING_OUTPUT_DIR="$OUTPUT_DIR/automated_reporting"
+mkdir -p $AUTOMATED_REPORTING_OUTPUT_DIR
+
 
 # parse results based on tool
 parse_results() {
@@ -62,49 +55,24 @@ parse_results() {
   esac
 }
 
-# output functions
-output_md() {
-  # add report header if this is first write
-  if [[ ! -s "$OUTPUT_FILE" ]]; then
+output_txt() {
+    OUTPUT_FILE="$AUTOMATED_REPORTING_OUTPUT_DIR/${TOOL_NAME}_report-${timestamp}.txt"
     echo "# Automated Consolidated Report" >> "$OUTPUT_FILE"
     echo "_Generated on $(date)_" >> "$OUTPUT_FILE"
     echo "" >> "$OUTPUT_FILE"
-  fi
-  echo "## $PHASE - $TOOL_NAME" >> "$OUTPUT_FILE"
-  echo "" >> "$OUTPUT_FILE"
-  parse_results | while read -r line; do
-    if [[ -n "$line" ]]; then
-      echo "- **$line**" >> "$OUTPUT_FILE"
-    fi
-  done
-  echo "" >> "$OUTPUT_FILE"
+
+    echo "##$TOOL_NAME" >> "$OUTPUT_FILE"
+    echo "" >> "$OUTPUT_FILE"
+    parse_results | while read -r line; do
+      if [[ -n "$line" ]]; then
+        echo "- **$line**" >> "$OUTPUT_FILE"
+      fi
+    done
+    echo "" >> "$OUTPUT_FILE"
+    
 }
 
-output_json() {
-  local data
-  data=$(parse_results | jq -R . | jq -s .)
-  jq -nc 
-    --arg phase "$PHASE" 
-    --arg tool "$TOOL_NAME" 
-    --argjson results "$data" 
-    '{phase: $phase, tool: $tool, results: $results}' >> "$OUTPUT_FILE"
-}
+output_txt
 
-output_csv() {
-  if [[ ! -f "$OUTPUT_FILE" ]]; then
-    echo "phase,tool,result" > "$OUTPUT_FILE"
-  fi
-  parse_results | while read -r line; do
-[[ -n $line ]] && printf '%s,%s,"%s"\n' "$PHASE" "$TOOL_NAME" "${line//\"/\"\"}" >> "$OUTPUT_FILE"
-  done 
-}
-
-# dispatch
-case "$FORMAT" in
-  md) output_md ;; 
-  json) output_json ;; 
-  csv) output_csv ;; 
-  *) echo "Unknown format: $FORMAT" >&2; return 1 ;;
- esac
-
+echo "You can find your completed report at '$OUTPUT_FILE'"
 }

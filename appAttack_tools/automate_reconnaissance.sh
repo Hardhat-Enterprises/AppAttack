@@ -4,13 +4,6 @@
 source run_tools.sh
 source utilities.sh
 
-
-#Define the log file location
-# LOG_FILE="$HOME/automated_scan.log"
-
-
-# > $LOG_FILE
-
 # Function to validate IP address
 validate_ip() {
     local ip="$1"
@@ -60,11 +53,6 @@ extract_host() {
 
 # Run automated scans
 run_automated_scan() {
-
-    if [[ "$output_to_file" == "n" ]]; then
-        echo -e "you cannot access this functionality without outputting results to a folder or file"
-        return 1
-    fi
 
     #directory that will hold automated scan outputs
     timestamp=$(date +%F_%H-%M-%S)
