@@ -244,8 +244,8 @@ generate_ai_insights() {
         case "$choice" in
         1)
 		#local
-		INSIGHTS=$(python3 -u "$SCRIPT_DIR/parsers/ollama_integration.py" --prompt "$PROMPT")
-		break
+        python3 -u ./ollama_integration.py --prompt "$PROMPT"		
+        break
 		;;
         2)
         #cloud
@@ -275,8 +275,7 @@ generate_ai_insights() {
     esac
     done
         else
-		    INSIGHTS=$(python3 -u "$SCRIPT_DIR/parsers/ollama_integration.py" --prompt "$PROMPT")
-		    echo "$INSIGHTS"
+        python3 -u ./ollama_integration.py --prompt "$PROMPT"
 		fi  
 
 

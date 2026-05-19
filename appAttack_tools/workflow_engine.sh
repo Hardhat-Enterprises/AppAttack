@@ -54,7 +54,7 @@ ${BYellow}Executing step: $step${NC}"
         done
 
         # Execute the command
-        local output=$(eval "$SCRIPT_DIR/plugins/$resolved_step")
+        local output=$(eval "sudo $SCRIPT_DIR/plugins/$resolved_step.sh")
         if [ $? -ne 0 ]; then
             echo -e "${RED}Step failed. Aborting workflow.${NC}"
             return 1

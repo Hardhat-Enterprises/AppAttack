@@ -43,3 +43,4 @@ plugin_help() {
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     run_plugin "$@"
 fi
+}

@@ -30,6 +30,8 @@ check_updates() {
                 update_tool_dpkg reaver
                 update_tool_dpkg ncrack
                 update_tool_dpkg john
+                update_tool_dpkg subfinder
+                update_tool_dpkg httpx-toolkit
 
                 cd "$tool_directory"
 

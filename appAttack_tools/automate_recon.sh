@@ -1,8 +1,4 @@
-
-
 #!/bin/bash
-
-
 # Dynamically determine the directory of this script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -10,7 +6,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/run_tools.sh"
 source "$SCRIPT_DIR/utilities.sh"
 
-# === Color Codes ===
 
 # === Color Codes ===
 BYellow="\033[1;33m"
@@ -29,7 +24,7 @@ display_reconnaissance_menu() {
     echo -e "${BCyan}4)${NC} ${White}Passive Web Recon (Wapiti Spidering)${NC}"
     echo -e "${BCyan}5)${NC} ${White}Packet Capture (Tshark)${NC}"
     echo -e "${BCyan}6)${NC} ${White}GUI Recon Tool (Legion)${NC}"
-    echo -e "${BCyan}0)${NC} ${White}Go Back (to Main Menu)${NC}"
+    echo -e "${BCyan}0)${NC} ${White}Go Back ${NC}"
     echo -e "${BYellow}╚════════════════════════════════════════════╝${NC}"
 }
 

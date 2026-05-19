@@ -31,6 +31,7 @@ install_ollama
 install_osv_scanner
 install_snyk_cli
 install_brakeman
+install_dredd
 # install_owasp_zap
 install_generate_ai_insights_dependencies
 install_metasploit
@@ -43,6 +44,9 @@ install_function nikto
 install_function legion
 install_function wapiti
 install_function zaproxy
+install_function subfinder
+install_function httpx-toolkit
+
 install_hydra
 install_feroxbuster
 install_theharvester
